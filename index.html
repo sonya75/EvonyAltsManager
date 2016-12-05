@@ -714,7 +714,7 @@
 	function cleanupfont(x){
 		var tg=document.createElement("html");
 		tg.innerHTML=x;
-		var st=tg.findElementsByTagName("font");
+		var st=tg.getElementsByTagName("font");
 		for (var i=0;i<st.length;i++){
 			st[i].removeAttribute("size");
 		}

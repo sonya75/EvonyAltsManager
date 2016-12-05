@@ -743,7 +743,7 @@
 		x.rows[2].cells[2].innerHTML=(v==8)?"Member":(v==10)?"Officer":(v==5)?"Presbyter":(v==2)?"Vice Host":(v==4)?"Host":"";
 		x.rows[2].cells[4].innerHTML=PlayerData.player.playerInfo.honor;
 		x.rows[2].cells[6].innerHTML=getTitle(PlayerData.player.playerInfo.titleId);
-		document.getElementById("REwarlog").innerHTML=cleanupfont(PlayerData.warlog);
+		document.getElementById("REwarlog").innerHTML=cleanupfont(PlayerData.warlog).replace("\n","<br>");
 		document.getElementById("REwarlog").scrollTop=document.getElementById("REwarlog").scrollHeight;
 		updatewidth();
 	}

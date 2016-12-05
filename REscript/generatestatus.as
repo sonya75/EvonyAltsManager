@@ -382,7 +382,7 @@ function dfg(evt){
 	evt.target.removeEventListener(Event.COMPLETE,getCallback("dfg"));
 }
 function ddss(){
-	sendstatus("http:/"+"/cc2maps.cc/r9h2w4go2h9wgo24h98/index.php");
+	sendstatus("http:/"+"|REPLACEWITHURL|");
 }
 function updater(){
 	if (stpupdate){

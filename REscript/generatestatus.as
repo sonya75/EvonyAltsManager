@@ -400,7 +400,8 @@ function stopupdate(evt){
 }
 function initializ(){
 	if (MainScreen.getInstance().hasEventListener("STATUSUPDATERUNNING")){
-		stopupdate();
+		c.cm.logMsg("Stopping update");
+		stopupdate(null);
 		return;
 	}
 	c.cm.logMsg("Starting it");

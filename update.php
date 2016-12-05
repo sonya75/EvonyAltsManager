@@ -22,6 +22,19 @@ if ($_SERVER["REQUEST_METHOD"]=="POST"){
   			$zip->extractTo('../');
   			$zip->close();
   			echo "Successfully updated.";
+  			$fp=fopen("lastupdated",'w');
+  			fwrite($fp,time());
+  			fclose($fp);
+  			$fp=fopen("REscript/generatestatus.as",'r');
+  			$data=fread($fp,filesize("REscript/generatestatus.as"));
+  			fclose($fp);
+  			$fp=fopen("REscript/generatestatus.as",'w');
+  			$scripturl="/".$_SERVER["HTTP_HOST"].dirname($_SERVER["PHP_SELF"])."/index.php";
+  			$data=str_replace("|REPLACEWITHURL|",$scripturl,$data);
+  			echo "HELLO";
+  			echo $data;
+  			fwrite($fp,$data);
+  			fclose($fp);
   			exit();
 		}
 		else{

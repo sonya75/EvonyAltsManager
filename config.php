@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 	$dbpwd=$_POST["dbpwd"];
 	if (($user1==$user)&&($pass1==$password)){
 		$fp=fopen("config/savedconfig.php",'w');
-		fwrite($fp,"<?php return array ( 'username' => '$user', 'pass' => '$pass', 'dbname' => '$dbname', 'dbuser' => '$dbuser', 'dbpwd' => '$dbpwd');?>");
+		fwrite($fp,"<?php return array ( 'username' => '$user', 'pass' => '$password', 'dbname' => '$dbname', 'dbuser' => '$dbuser', 'dbpwd' => '$dbpwd');?>");
 		fclose($fp);
 		echo "Configuration saved successfully.";
 		exit();

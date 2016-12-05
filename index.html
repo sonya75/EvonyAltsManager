@@ -18,13 +18,23 @@
     .REtabColonyUnderAttack			{height:22px; padding:0px 5px 0px 5px; background:linear-gradient(#A80A0A, #F54949); border-top:1px solid #464749; border-right:0px solid #464749; border-bottom:0px solid #464749; border-left:1px solid #464749; color:#FFFFFF; font-family:DejaVu Sans, Verdana, Geneva, sans-serif; font-size:12px; font-weight:normal;}
     .REtabColonyUnderAttack:hover	{height:22px; padding:0px 5px 0px 5px; background:linear-gradient(#B21414, #FF5353); border-top:1px solid #323335; border-right:0px solid #323335; border-bottom:0px solid #323335; border-left:1px solid #323335; color:#FFFFFF; font-family:DejaVu Sans, Verdana, Geneva, sans-serif; font-size:12px; font-weight:normal;}
     .REtabDownColonyUnderAttack		{height:22px; padding:0px 5px 0px 5px; background:#A80A0A; border-top:1px solid #464749; border-right:0px solid #464749; border-bottom:0px solid #464749; border-left:1px solid #464749; color:#FFFFFF; font-family:DejaVu Sans, Verdana, Geneva, sans-serif; font-size:12px; font-weight:normal;}
-	.REtable					{table-layout:fixed; display:None; border-top:0px solid #202225; border-right:1px solid #202225; border-bottom:1px solid #202225; border-left:1px solid #202225; border-collapse:collapse;}
-	.REtable th					{padding:2px 0px 2px 0px; background:#494647; border-top:0px solid #202225; border-right:1px solid #202225; border-bottom:1px solid #202225; border-left:1px solid #202225; border-collapse:collapse; color:#FFFFFF; font-family:DejaVu Sans, Verdana, Geneva, sans-serif; font-size:12px; font-weight:normal;}
 	.closebutton 				{background: white; color:black;}
 	.closebutton:hover			{background: linear-gradient(#D10707,#920303); color:white; cursor:pointer; font-size: 1.2em;}
+	.REtable					{table-layout:fixed; display:None; border-top:0px solid #202225; border-right:1px solid #202225; border-bottom:1px solid #202225; border-left:1px solid #202225; border-collapse:collapse;}
+	.REtable th					{padding:2px 0px 2px 0px; background:#494647; border-top:0px solid #202225; border-right:1px solid #202225; border-bottom:1px solid #202225; border-left:1px solid #202225; border-collapse:collapse; color:#FFFFFF; font-family:DejaVu Sans, Verdana, Geneva, sans-serif; font-size:12px; font-weight:normal;}
 	.REtable td					{padding:2px 0px 2px 0px; border:1px solid #ADADAD; border-collapse:collapse; text-align:center; color:#222222; font-family:DejaVu Sans, Verdana, Geneva, sans-serif; font-size:12px; font-weight:normal;}
 	.REtable tr:nth-child(even)	{background:#EDEDEE;}
 	.REtable tr:nth-child(odd)	{background:#F6F6F7;}
+	.REtableD					{table-layout:fixed; display:None; border-top:0px solid #202225; border-right:1px solid #202225; border-bottom:1px solid #202225; border-left:1px solid #202225; border-collapse:collapse;}
+	.REtableD th					{padding:2px 20px 0px 2px; background:#494647; border-top:0px solid #202225; border-right:1px solid #202225; border-bottom:1px solid #202225; border-left:1px solid #202225; border-collapse:collapse; color:#FFFFFF; font-family:DejaVu Sans, Verdana, Geneva, sans-serif; font-size:12px; font-weight:normal;}
+	.REtableD td					{padding:2px 20px 2px 2px; border:1px solid #ADADAD; border-collapse:collapse; text-align:right; color:#222222; font-family:DejaVu Sans, Verdana, Geneva, sans-serif; font-size:12px; font-weight:normal;}
+	.REtableD tr:nth-child(even)	{background:#EDEDEE;}
+	.REtableD tr:nth-child(odd)	{background:#F6F6F7;}
+	.REtableL					{table-layout:fixed; display:None; border-top:0px solid #202225; border-right:1px solid #202225; border-bottom:1px solid #202225; border-left:1px solid #202225; border-collapse:collapse;}
+	.REtableL th					{padding:2px 2px 0px 2px; background:#494647; border-top:0px solid #202225; border-right:1px solid #202225; border-bottom:1px solid #202225; border-left:1px solid #202225; border-collapse:collapse; color:#FFFFFF; font-family:DejaVu Sans, Verdana, Geneva, sans-serif; font-size:12px; font-weight:normal;}
+	.REtableL td					{padding:2px 2px 2px 20px; border:1px solid #ADADAD; border-collapse:collapse; text-align:left; color:#222222; font-family:DejaVu Sans, Verdana, Geneva, sans-serif; font-size:12px; font-weight:normal;}
+	.REtableL tr:nth-child(even)	{background:#EDEDEE;}
+	.REtableL tr:nth-child(odd)	{background:#F6F6F7;}
 	.Summarytable 				{font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #a9a9a9;border-collapse: collapse;}
 	.Summarytable th 			{font-size:20px;background-color:#b8b8b8;border-width: 1px;padding: 8px;border-style: solid;border-color: #a9a9a9;text-align:center;}
 	.Summarytable tr 			{background-color:#DCD5D5;}
@@ -355,21 +365,21 @@
 			x.rows[2].cells[2].innerHTML=pq;
 			var x=document.getElementById("resources");
 			var fcd=gettotalres();
-			x.rows[1].cells[1].innerHTML=ty.resource.gold.toLocaleString();
-			x.rows[1].cells[2].innerHTML=fcd.gold.toLocaleString();
-			x.rows[1].cells[3].innerHTML=(ty.resource.taxIncome+ty.resource.colonyGold-ty.resource.herosSalary).toLocaleString();
-			x.rows[2].cells[1].innerHTML=ty.resource.food.amount.toLocaleString();
-			x.rows[2].cells[2].innerHTML=fcd.food.toLocaleString();
-			x.rows[2].cells[3].innerHTML=(ty.resource.food.increaseRate+ty.resource.colonyFood-ty.resource.troopCostFood).toLocaleString();
-			x.rows[3].cells[1].innerHTML=ty.resource.wood.amount.toLocaleString();
-			x.rows[3].cells[2].innerHTML=fcd.wood.toLocaleString();
-			x.rows[3].cells[3].innerHTML=(ty.resource.wood.increaseRate+ty.resource.colonyWood).toLocaleString();
-			x.rows[4].cells[1].innerHTML=ty.resource.stone.amount.toLocaleString();
-			x.rows[4].cells[2].innerHTML=fcd.stone.toLocaleString();
-			x.rows[4].cells[3].innerHTML=(ty.resource.stone.increaseRate+ty.resource.colonyStone).toLocaleString();
-			x.rows[5].cells[1].innerHTML=ty.resource.iron.amount.toLocaleString();
-			x.rows[5].cells[2].innerHTML=fcd.iron.toLocaleString();
-			x.rows[5].cells[3].innerHTML=(ty.resource.iron.increaseRate+ty.resource.colonyIron).toLocaleString();
+			x.rows[1].cells[1].innerHTML=Math.floor(ty.resource.gold).toLocaleString();
+			x.rows[1].cells[2].innerHTML=Math.floor(fcd.gold).toLocaleString();
+			x.rows[1].cells[3].innerHTML=Math.floor(ty.resource.taxIncome+ty.resource.colonyGold-ty.resource.herosSalary).toLocaleString();
+			x.rows[2].cells[1].innerHTML=Math.floor(ty.resource.food.amount).toLocaleString();
+			x.rows[2].cells[2].innerHTML=Math.floor(fcd.food).toLocaleString();
+			x.rows[2].cells[3].innerHTML=Math.floor(ty.resource.food.increaseRate+ty.resource.colonyFood-ty.resource.troopCostFood).toLocaleString();
+			x.rows[3].cells[1].innerHTML=Math.floor(ty.resource.wood.amount).toLocaleString();
+			x.rows[3].cells[2].innerHTML=Math.floor(fcd.wood).toLocaleString();
+			x.rows[3].cells[3].innerHTML=Math.floor(ty.resource.wood.increaseRate+ty.resource.colonyWood).toLocaleString();
+			x.rows[4].cells[1].innerHTML=Math.floor(ty.resource.stone.amount).toLocaleString();
+			x.rows[4].cells[2].innerHTML=Math.floor(fcd.stone).toLocaleString();
+			x.rows[4].cells[3].innerHTML=Math.floor(ty.resource.stone.increaseRate+ty.resource.colonyStone).toLocaleString();
+			x.rows[5].cells[1].innerHTML=Math.floor(ty.resource.iron.amount).toLocaleString();
+			x.rows[5].cells[2].innerHTML=Math.floor(fcd.iron).toLocaleString();
+			x.rows[5].cells[3].innerHTML=Math.floor(ty.resource.iron.increaseRate+ty.resource.colonyIron).toLocaleString();
 			x.rows[6].cells[1].innerHTML=ty.resource.maxPopulation.toLocaleString();
 			var x=document.getElementById("techs");
 			techtypes=["","Agriculture","Lumbering","Masonry","Mining","Metal Casting","","Informatics","Military Science","Military Tradition","Iron Working","Logistics","Compass","Horseback Riding","Archery","Stockpile","Medicine","Construction","Engineering","Machinery","Privateering"];
@@ -875,7 +885,7 @@
   </tr>
 </table>
 <div style="height: 200px;overflow: auto;">
-<table id="resources" class="REtable">
+<table id="resources" class="REtableD">
   <tr>
 	<th>Resource</th>
 	<th>Amount</th>
@@ -936,10 +946,10 @@
 	<th style="width: 30%">Event Time</th>
 </tr>
 </table>
-<table id="buildings" class="REtable">
+<table id="buildings" class="REtableL">
 <tr>
-	<th style="width: 20%">Building</th>
-	<th style="width: 80%">Level(s)</th>
+	<th width="20%">Building</th>
+	<th width="80%">Level(s)</th>
 </tr>
 <tr>
 	<td>Wall</td>

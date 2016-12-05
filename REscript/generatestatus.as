@@ -402,6 +402,7 @@ function initializ(){
 	if (MainScreen.getInstance().hasEventListener("STATUSUPDATERUNNING")){
 		c.cm.logMsg("Stopping update");
 		stopupdate(null);
+		MainScreen.getInstance().removeEventListener("STATUSUPDATERUNNING",MainScreen.getInstance().disableLogoutButton);
 		return;
 	}
 	c.cm.logMsg("Starting it");

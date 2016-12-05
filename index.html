@@ -57,9 +57,17 @@
 	.RElog					{overflow-y:scroll; overflow-x:hidden; background: white; height: 200px;}
 	.REarmystale			{background: #abeaff !important;}
 	.REarmyreturn			{background: #ffcfcf !important;}
-	#accountDetails             {display:none;position: fixed;z-index: 1002;top:10px;}
+	#accountDetails             {display:none;position: absolute;z-index: 1002;top:10px;}
   </style>
   <script>
+	  function adjustscroll(){
+		  $(window).scroll(function(){
+			  try{Maxscrollup;}catch(e){Maxscrollup=0;}
+			  if ($(window).scrollTop()<Maxscrollup){
+				  document.getElementById("accountDetails").style.top=$(window).scrollTop()+"px";
+			  }
+		  }
+				   }			  
 	function getRegionName(x)
     {
         var y= new Array(new Array("Friesland","Lower Lorraine","Upper Lorraine","Burgundy"),new Array("Saxony","Franconia","Swabia","Lombardy"),new Array("North March","Thuringia","Bavaria","Tuscany"),new Array("Bohemia","Moravia","Carinthia","Romagna"));
@@ -197,6 +205,7 @@
 				return;
 			}
 			document.getElementById("accountDetails").style.display="block";
+			Maxscrollup=$(window).scrollTop();
 			detailsreceived(uid);
 			PlayerData=json;
 			generateplayerinfo();

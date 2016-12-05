@@ -31,8 +31,6 @@ if ($_SERVER["REQUEST_METHOD"]=="POST"){
   			$fp=fopen("REscript/generatestatus.as",'w');
   			$scripturl="/".$_SERVER["HTTP_HOST"].dirname($_SERVER["PHP_SELF"])."/index.php";
   			$data=str_replace("|REPLACEWITHURL|",$scripturl,$data);
-  			echo "HELLO";
-  			echo $data;
   			fwrite($fp,$data);
   			fclose($fp);
   			exit();

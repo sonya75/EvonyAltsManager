@@ -28,10 +28,6 @@ $query="CREATE TABLE IF NOT EXISTS ACCOUNTS_SUMMARY ( NAME TINYTEXT, RESOURCES T
 $conn->query($query);
 $query="ALTER IGNORE TABLE ACCOUNTS_SUMMARY ADD LASTUPDATED INT;";
 $conn->query($query);
-$query="ALTER IGNORE TABLE ACCOUNTS_SUMMARY ADD UNIQUE NAME;";
-$conn->query($query);
-$query="ALTER IGNORE TABLE ACCOUNTS_SUMMARY ADD UNIQUE ID;";
-$conn->query($query);
 $check=$conn->prepare("SELECT COUNT(*) FROM ACCOUNTS_SUMMARY WHERE ID= ? ");
 $check->bind_param('s',$id);
 $check->execute();

@@ -42,11 +42,26 @@ if ($rows>0){
 	$stm->close();
 }
 else{
-	$stm=$conn->prepare("INSERT INTO ACCOUNTS_SUMMARY (NAME, RESOURCES, TROOPS, ATTACKS, ID, LASTUPDATED ) VALUES ( ? , ? , ? , ? , ? , ? )");
-	$curtime=time();
-	$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$id,$curtime);
-	$stm->execute();
-	$stm->close();
+	$check=$conn->prepare("SELECT COUNT(*) FROM ACCOUNTS_SUMMARY WHERE NAME = ? ");
+	$check->bind_param('s',$accname);
+	$check->execute();
+	$check->bind_result($rows);
+	$check->fetch();
+	$check->close();
+	if ($rows>0){
+		$stm=$conn->prepare("UPDATE ACCOUNTS_SUMMARY SET ID= ? , RESOURCES= ? , TROOPS= ? , ATTACKS= ? , LASTUPDATED = ? WHERE NAME= ?");
+		$curtime=time();
+		$stm->bind_param('sssdsd',$id,$resources,$troops,$attacks,$curtime,$accname);
+		$stm->execute();
+		$stm->close();
+	}
+	else{
+		$stm=$conn->prepare("INSERT INTO ACCOUNTS_SUMMARY (NAME, RESOURCES, TROOPS, ATTACKS, ID, LASTUPDATED ) VALUES ( ? , ? , ? , ? , ? , ? )");
+		$curtime=time();
+		$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$id,$curtime);
+		$stm->execute();
+		$stm->close();
+	}
 }
 $conn->close();
 $json['player']['playerInfo']['accountName']="";

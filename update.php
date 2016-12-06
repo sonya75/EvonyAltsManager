@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"]=="POST"){
 }
 if ($_COOKIE["SESSID"]){
 	if ($authstr==$_COOKIE["SESSID"]){
-		echo "<html><body><button type='submit' value='Submit'>Update</button></html></body>";
+		echo "<html><body><form method='post' action='update.php' id='form1'></form><button type='submit' value='Submit' form='form1'>Update</button></html></body>";
 		exit();
 	}
 }

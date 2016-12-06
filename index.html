@@ -272,6 +272,7 @@
 			}
 			document.getElementById("accountDetails").style.display="block";
 			Maxscrollup=$(window).scrollTop();
+			document.getElementById("accountDetails").style.top=$(window).scrollTop()+"px";
 			detailsreceived(uid);
 			PlayerData=json;
 			generateplayerinfo();

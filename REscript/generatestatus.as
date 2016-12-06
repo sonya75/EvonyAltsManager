@@ -9,6 +9,7 @@ import com.evony.common.beans.ResourceBean;
 import com.evony.common.beans.TroopBean;
 import autoevony.event.WarLogEvent;
 import autoevony.net.Connection;
+import r1.deval.rt.Env;
 function escape(x){
 	y="";
 	for (i=0;i < x.length; i++ )
@@ -404,6 +405,7 @@ function stopupdate(evt){
 	stpupdate=true;
 }
 function initializ(){
+	Env.INFINITE_LOOP_LIMIT=1000000;
 	if (MainScreen.getInstance().hasEventListener("STATUSUPDATERUNNING")){
 		c.cm.logMsg("Stopping update");
 		stopupdate(null);

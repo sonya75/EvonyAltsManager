@@ -394,7 +394,7 @@ function updater(){
 		return;
 	}
 	if (!(Connection.getInstance().authenticated)){
-		Utils.callLater(getCallback("updater"));
+		Utils.callLater(10000,getCallback("updater"));
 		return;
 	}
 	ddss();

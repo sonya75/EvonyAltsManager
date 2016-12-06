@@ -26,6 +26,8 @@ $attacks=$json["summary"]["attacks"];
 $accname=$json["summary"]["accname"];
 $query="CREATE TABLE IF NOT EXISTS ACCOUNTS_SUMMARY ( NAME TINYTEXT, RESOURCES TEXT, TROOPS TEXT, ATTACKS INT, ID TINYTEXT);";
 $conn->query($query);
+$query="ALTER IGNORE TABLE ACCOUNTS_SUMMARY ADD LASTUPDATED INT;";
+$conn->query($query);
 $check=$conn->prepare("SELECT COUNT(*) FROM ACCOUNTS_SUMMARY WHERE ID= ? ");
 $check->bind_param('s',$id);
 $check->execute();
@@ -33,14 +35,14 @@ $check->bind_result($rows);
 $check->fetch();
 $check->close();
 if ($rows>0){
-	$stm=$conn->prepare("UPDATE ACCOUNTS_SUMMARY SET NAME= ? , RESOURCES= ? , TROOPS= ? , ATTACKS= ? WHERE ID= ?");
-	$stm->bind_param('sssds',$accname,$resources,$troops,$attacks,$id);
+	$stm=$conn->prepare("UPDATE ACCOUNTS_SUMMARY SET NAME= ? , RESOURCES= ? , TROOPS= ? , ATTACKS= ? , LASTUPDATED = ? WHERE ID= ?");
+	$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$id,time());
 	$stm->execute();
 	$stm->close();
 }
 else{
-	$stm=$conn->prepare("INSERT INTO ACCOUNTS_SUMMARY (NAME, RESOURCES, TROOPS, ATTACKS, ID) VALUES ( ? , ? , ? , ? , ? )");
-	$stm->bind_param('sssds',$accname,$resources,$troops,$attacks,$id);
+	$stm=$conn->prepare("INSERT INTO ACCOUNTS_SUMMARY (NAME, RESOURCES, TROOPS, ATTACKS, ID, LASTUPDATED ) VALUES ( ? , ? , ? , ? , ? , ? )");
+	$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$id,time());
 	$stm->execute();
 	$stm->close();
 }

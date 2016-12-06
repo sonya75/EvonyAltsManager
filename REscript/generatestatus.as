@@ -333,7 +333,7 @@ function allstatus(){
 	if (uv==null){
 		uv=new Object();
 		uv['server']=LoginHelper.getInstance().strserverAlias+" ("+LoginHelper.getInstance().server+")";
-		uv["player"]=c.player.toObject();
+		uv["player"]=MainScreen.getCities()[0].player.toObject();
 		uv['player']['castles']=new Array();
 		for each(p in MainScreen.getCities()){
 			uv['player']['castles'].push(castletoobject(p));
@@ -342,7 +342,7 @@ function allstatus(){
 		uv["summary"]["resources"]=getallresources();
 		uv["summary"]["troops"]=getalltroops();
 		uv["summary"]["attacks"]=getattackcount();
-		uv["summary"]["accname"]=c.player.playerInfo.userName;
+		uv["summary"]["accname"]=MainScreen.getCities()[0].player.playerInfo.userName;
 	}
 	if (warlgmsg==null){
 		warlgmsg=1;

@@ -259,11 +259,11 @@ function castletoobject(kl){
     	xp.localarmies.push(armybeantoobject(hty));
     }
     xp.herosArray=new Array();
-    for each(hty in c.cm.heroes){
+    for each(hty in kl.cm.heroes){
     	xp.herosArray.push(hty.toObject());
     }
     xp.fieldsArray=new Array();
-    for each(hty in c.cm.fields){
+    for each(hty in fcm.fields){
     	xp.fieldsArray.push(hty.toObject());
     }
     xp.buildings=new Array();

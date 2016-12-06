@@ -51,7 +51,7 @@ else{
 	if ($rows>0){
 		$stm=$conn->prepare("UPDATE ACCOUNTS_SUMMARY SET ID= ? , RESOURCES= ? , TROOPS= ? , ATTACKS= ? , LASTUPDATED = ? WHERE NAME= ?");
 		$curtime=time();
-		$stm->bind_param('sssdsd',$id,$resources,$troops,$attacks,$curtime,$accname);
+		$stm->bind_param('sssdds',$id,$resources,$troops,$attacks,$curtime,$accname);
 		$stm->execute();
 		$stm->close();
 	}

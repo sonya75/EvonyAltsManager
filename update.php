@@ -1,19 +1,19 @@
 <?php
 error_reporting(0);
+$var=include("config/savedconfig.php");
+if (!($var)){
+	header("location:index.php");
+	exit();
+}
+$user1=$var["username"];
+$pass1=$var["pass"];
+if (!$user1){
+	header("location:index.php");
+	exit();
+}
+$authstr=md5($user1."d92f29f9fu".$pass1);
 if ($_SERVER["REQUEST_METHOD"]=="POST"){
-	$var=include("config/savedconfig.php");
-	if (!($var)){
-		header("location:index.php");
-		exit();
-	}
 	$authstr1=$_COOKIE["SESSID"];
-	$user1=$var["username"];
-	$pass1=$var["pass"];
-	if (!$user1){
-		header("location:index.php");
-		exit();
-	}
-	$authstr=md5($user1."d92f29f9fu".$pass1);
 	if (!($authstr1)){
 		$user=$_POST["username"];
 		$pass=$_POST["pass"];

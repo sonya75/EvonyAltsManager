@@ -66,7 +66,7 @@
 			  if ($(window).scrollTop()<Maxscrollup){
 				  document.getElementById("accountDetails").style.top=$(window).scrollTop()+"px";
 			  }
-		  }
+		  };)
 				   }
 	function getRegionName(x)
     {
@@ -689,10 +689,14 @@
 		}
 	}
 	function generatesummary(x){
-		var t=new Object();
+		var t=new Array();
 		var y1=new Array();
 		var y2=new Array();
 		for (var i=0;i<x.length;i++){
+			if (t.indexOf(x[i][4])!=-1){
+				continue;
+			}
+			t.push(x[i][4]);
 			if (x[i][3]>0){
 				y1.push(x[i]);
 			}

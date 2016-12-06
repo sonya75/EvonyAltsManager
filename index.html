@@ -66,8 +66,8 @@
 			  if ($(window).scrollTop()<Maxscrollup){
 				  document.getElementById("accountDetails").style.top=$(window).scrollTop()+"px";
 			  }
-		  });
-				   }			  
+		  }
+				   }
 	function getRegionName(x)
     {
         var y= new Array(new Array("Friesland","Lower Lorraine","Upper Lorraine","Burgundy"),new Array("Saxony","Franconia","Swabia","Lombardy"),new Array("North March","Thuringia","Bavaria","Tuscany"),new Array("Bohemia","Moravia","Carinthia","Romagna"));
@@ -673,15 +673,26 @@
 		}
 		return x;
 	}
+	function startblobtimer(x){
+		if (x.timer){
+			clearTimeout(x.timer);
+		}
+		var y=x.getAttribute("value");
+		y=((y==null)||(y=='null'))?0:y
+		if (y*1000<((new Date().getTime())-120000)){
+			x.innerHTML="<img src='redblob.png'>";
+			return;
+		}
+		else{
+			x.innerHTML="<img src='greenblob.png'>";
+			return setTimeout(function (){startblobtimer(x);},(y*1000-((new Date().getTime())-120000)));
+		}
+	}
 	function generatesummary(x){
-		var t=new Array();
+		var t=new Object();
 		var y1=new Array();
 		var y2=new Array();
 		for (var i=0;i<x.length;i++){
-			if (t.indexOf(x[i][4])!=-1){
-				continue;
-			}
-			t.push(x[i][4]);
 			if (x[i][3]>0){
 				y1.push(x[i]);
 			}
@@ -694,38 +705,44 @@
 			if (document.getElementById("summary").rows[i+1]==null){
 				var d=document.createElement("tr")
 				document.getElementById("summary").appendChild(d);
-				var y=d.insertCell(-1);
-				var y=d.insertCell(-1);
-				var y=d.insertCell(-1);
-				var y=d.insertCell(-1);
-				var y=d.insertCell(-1);
+				d.insertCell(-1);
+				d.insertCell(-1);
+				d.insertCell(-1);
+				d.insertCell(-1);
+				d.insertCell(-1);
+				d.insertCell(-1);
 			}
 			var fgt=document.getElementById("summary").rows[i+1];
 			fgt.className="UnderAttack";
-			fgt.cells[0].innerHTML=xp[0];
-			fgt.cells[1].innerHTML=xp[1];
-			fgt.cells[2].innerHTML=xp[2];
-			fgt.cells[3].innerHTML=xp[3];
-			fgt.cells[4].innerHTML="<button onclick='showaccountdetails(event)' value='"+xp[4]+"'>Show Details</button>";
+			fgt.cells[0].setAttribute("value",xp[5]);
+			fgt.cells[0].timer=startblobtimer(fgt.cells[0]);
+			fgt.cells[1].innerHTML=xp[0];
+			fgt.cells[2].innerHTML=xp[1];
+			fgt.cells[3].innerHTML=xp[2];
+			fgt.cells[4].innerHTML=xp[3];
+			fgt.cells[5].innerHTML="<button onclick='showaccountdetails(event)' value='"+xp[4]+"'>Show Details</button>";
 		}
 		for (;i<y2.length+y1.length;i++){
 			var xp=y2[i-y1.length];
 			if (document.getElementById("summary").rows[i+1]==null){
 				var d=document.createElement("tr")
 				document.getElementById("summary").appendChild(d);
-				var y=d.insertCell(-1);
-				var y=d.insertCell(-1);
-				var y=d.insertCell(-1);
-				var y=d.insertCell(-1);
-				var y=d.insertCell(-1);
+				d.insertCell(-1);
+				d.insertCell(-1);
+				d.insertCell(-1);
+				d.insertCell(-1);
+				d.insertCell(-1);
+				d.insertCell(-1);
 			}
 			var fgt=document.getElementById("summary").rows[i+1];
 			fgt.className="";
-			fgt.cells[0].innerHTML=xp[0];
-			fgt.cells[1].innerHTML=xp[1];
-			fgt.cells[2].innerHTML=xp[2];
-			fgt.cells[3].innerHTML=xp[3];
-			fgt.cells[4].innerHTML="<button onclick='showaccountdetails(event)' value='"+xp[4]+"'>Show Details</button>";
+			fgt.cells[0].setAttribute("value",xp[5]);
+			fgt.cells[0].timer=startblobtimer(fgt.cells[0]);
+			fgt.cells[1].innerHTML=xp[0];
+			fgt.cells[2].innerHTML=xp[1];
+			fgt.cells[3].innerHTML=xp[2];
+			fgt.cells[4].innerHTML=xp[3];
+			fgt.cells[5].innerHTML="<button onclick='showaccountdetails(event)' value='"+xp[4]+"'>Show Details</button>";
 		}
 		for (;(i+1)<document.getElementById("summary").rows.length;){
 			document.getElementById("summary").removeChild(document.getElementById("summary").rows[i+1]);

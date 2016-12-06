@@ -24,7 +24,7 @@ $resources=$json["summary"]["resources"];
 $troops=$json["summary"]["troops"];
 $attacks=$json["summary"]["attacks"];
 $accname=$json["summary"]["accname"];
-$query="CREATE TABLE IF NOT EXISTS ACCOUNTS_SUMMARY ( RESOURCES TEXT, TROOPS TEXT, ATTACKS INT, LASTUPDATED INT, NAME TINYTEXT, ID INT);";
+$query="CREATE TABLE IF NOT EXISTS ACCOUNTS_SUMMARY ( RESOURCES TEXT, TROOPS TEXT, ATTACKS INT, LASTUPDATED INT, NAME TINYTEXT, ID TINYTEXT);";
 $conn->query($query);
 $query="ALTER TABLE accounts_summary ADD UNIQUE INDEX `unique_index` (NAME(30), ID(30));";
 $conn->query($query);

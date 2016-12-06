@@ -44,7 +44,7 @@ if ($rows>0){
 else{
 	$stm=$conn->prepare("INSERT INTO ACCOUNTS_SUMMARY (NAME, RESOURCES, TROOPS, ATTACKS, ID, LASTUPDATED ) VALUES ( ? , ? , ? , ? , ? , ? )");
 	$curtime=time();
-	$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$curtime,$id);
+	$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$id,$curtime);
 	$stm->execute();
 	$stm->close();
 }

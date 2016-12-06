@@ -763,6 +763,9 @@
 			if (t.indexOf(x[i][4])!=-1){
 				continue;
 			}
+			if ((!(x[i][0]))||(!(x[i][1]))||(!(x[i][2]))||(!(x[i][3]))){
+				continue;
+			}
 			t.push(x[i][4]);
 			if (x[i][3]>0){
 				y1.push(x[i]);

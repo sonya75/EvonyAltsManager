@@ -37,14 +37,14 @@ $check->close();
 if ($rows>0){
 	$stm=$conn->prepare("UPDATE ACCOUNTS_SUMMARY SET NAME= ? , RESOURCES= ? , TROOPS= ? , ATTACKS= ? , LASTUPDATED = ? WHERE ID= ?");
 	$curtime=time();
-	$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$id,$curtime);
+	$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$curtime,$id);
 	$stm->execute();
 	$stm->close();
 }
 else{
 	$stm=$conn->prepare("INSERT INTO ACCOUNTS_SUMMARY (NAME, RESOURCES, TROOPS, ATTACKS, ID, LASTUPDATED ) VALUES ( ? , ? , ? , ? , ? , ? )");
 	$curtime=time();
-	$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$id,$curtime);
+	$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$curtime,$id);
 	$stm->execute();
 	$stm->close();
 }

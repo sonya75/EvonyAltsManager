@@ -24,10 +24,12 @@ $resources=$json["summary"]["resources"];
 $troops=$json["summary"]["troops"];
 $attacks=$json["summary"]["attacks"];
 $accname=$json["summary"]["accname"];
-$query="CREATE TABLE IF NOT EXISTS ACCOUNTS_SUMMARY ( NAME TINYTEXT, RESOURCES TEXT, TROOPS TEXT, ATTACKS INT, ID TINYTEXT);";
+$query="CREATE TABLE IF NOT EXISTS ACCOUNTS_SUMMARY ( RESOURCES TEXT, TROOPS TEXT, ATTACKS INT, LASTUPDATED INT);";
 $conn->query($query);
-$query="ALTER IGNORE TABLE ACCOUNTS_SUMMARY ADD LASTUPDATED INT;";
+$query="ALTER IGNORE TABLE ACCOUNTS_SUMMARY ADD UNIQUE NAME TINYTEXT";
 $conn->query($query);
+$query="ALTER IGNORE TABLE ACCOUNTS_SUMMARY ADD UNIQUE ID INT";
+$conn->quer($query);
 $check=$conn->prepare("SELECT COUNT(*) FROM ACCOUNTS_SUMMARY WHERE ID= ? ");
 $check->bind_param('s',$id);
 $check->execute();
@@ -35,86 +37,18 @@ $check->bind_result($rows);
 $check->fetch();
 $check->close();
 if ($rows>0){
-	if ($rows>1){
-		$stm=$conn->prepare("DELETE FROM ACCOUNTS_SUMMARY WHERE ID = ?;");
-		$stm->bind_param('s',$id);
-		$stm->execute();
-		$stm->close();
-		$stm=$conn->prepare("DELETE FROM ACCOUNTS_SUMMARY WHERE NAME = ?;");
-		$stm->bind_param('s',$accname);
-		$stm->execute();
-		$stm->close();
-		$stm=$conn->prepare("INSERT INTO ACCOUNTS_SUMMARY (NAME, RESOURCES, TROOPS, ATTACKS, ID, LASTUPDATED ) VALUES ( ? , ? , ? , ? , ? , ? )");
-		$curtime=time();
-		$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$id,$curtime);
-		$stm->execute();
-		$stm->close();
-	}
-	else{
-		$check=$conn->prepare("SELECT COUNT(*) FROM ACCOUNTS_SUMMARY WHERE NAME= ? ");
-		$check->bind_param('s',$accname);
-		$check->execute();
-		$check->bind_result($rows);
-		$check->fetch();
-		$check->close();
-		if ($rows>1){
-			$stm=$conn->prepare("DELETE FROM ACCOUNTS_SUMMARY WHERE NAME = ?;");
-			$stm->bind_param('s',$accname);
-			$stm->execute();
-			$stm->close();
-			$stm=$conn->prepare("INSERT INTO ACCOUNTS_SUMMARY (NAME , RESOURCES , TROOPS , ATTACKS , LASTUPDATED , ID) VALUES (?,?,?,?,?,?)");
-			$curtime=time();
-			$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$curtime,$id);
-			$stm->execute();
-			$stm->close();			
-		}
-		else{
-			$stm=$conn->prepare("UPDATE ACCOUNTS_SUMMARY SET NAME= ? , RESOURCES= ? , TROOPS= ? , ATTACKS= ? , LASTUPDATED = ? WHERE ID= ?");
-			$curtime=time();
-			$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$curtime,$id);
-			$stm->execute();
-			$stm->close();
-		}
-	}
+	$stm=$conn->prepare("UPDATE ACCOUNTS_SUMMARY SET NAME= ? , RESOURCES= ? , TROOPS= ? , ATTACKS= ? , LASTUPDATED = ? WHERE ID= ?");
+	$curtime=time();
+	$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$curtime,$id);
+	$stm->execute();
+	$stm->close();
 }
 else{
-	$check=$conn->prepare("SELECT COUNT(*) FROM ACCOUNTS_SUMMARY WHERE NAME = ? ");
-	$check->bind_param('s',$accname);
-	$check->execute();
-	$check->bind_result($rows);
-	$check->fetch();
-	$check->close();
-	if ($rows>0){
-		if ($rows>1){
-			$stm=$conn->prepare("DELETE FROM ACCOUNTS_SUMMARY WHERE NAME = ?;");
-			$stm->bind_param('s',$accname);
-			$stm->execute();
-			$stm->close();
-			$stm=$conn->prepare("DELETE FROM ACCOUNTS_SUMMARY WHERE ID = ?;");
-			$stm->bind_param('s',$id);
-			$stm->execute();
-			$stm->close();
-			$stm=$conn->prepare("INSERT INTO ACCOUNTS_SUMMARY (NAME, RESOURCES, TROOPS, ATTACKS, ID, LASTUPDATED ) VALUES ( ? , ? , ? , ? , ? , ? )");
-			$curtime=time();
-			$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$id,$curtime);
-			$stm->execute();
-			$stm->close();
-		}
-		else{
-			$stm=$conn->prepare("UPDATE ACCOUNTS_SUMMARY SET ID= ? , RESOURCES= ? , TROOPS= ? , ATTACKS= ? , LASTUPDATED = ? WHERE NAME= ?");
-			$curtime=time();
-			$stm->bind_param('sssdds',$id,$resources,$troops,$attacks,$curtime,$accname);
-			$stm->execute();
-			$stm->close();
-		}
-	}
-	else{
-		$stm=$conn->prepare("INSERT INTO ACCOUNTS_SUMMARY (NAME, RESOURCES, TROOPS, ATTACKS, ID, LASTUPDATED ) VALUES ( ? , ? , ? , ? , ? , ? )");
-		$curtime=time();
-		$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$id,$curtime);
-		$stm->execute();
-		$stm->close();
-	}
+	$stm=$conn->prepare("INSERT INTO ACCOUNTS_SUMMARY (NAME, RESOURCES, TROOPS, ATTACKS, ID, LASTUPDATED ) VALUES ( ? , ? , ? , ? , ? , ? )");
+	$curtime=time();
+	$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$id,$curtime);
+	$stm->execute();
+	$stm->close();
 }
 $conn->close();
 $json['player']['playerInfo']['accountName']="";

@@ -55,9 +55,13 @@
 	.REarmyDeploy			{background: #b24205 !important;}
 	.REarmy 				{background: #ffffff !important;}
 	.troopTable 			{table-layout: fixed !important; width: 100% !important;}
-	.troopTable td 			{text-align: left !important; border-width: 0px !important; padding: 0px !important; width: auto !important;}
+	.troopTable td 			{text-align: left !important; border-width: 0px !important; padding: 0px 0px 0px 7px !important; width: auto !important;}
 	.troopTable td.troopCount {text-align:right !important;}
 	.troopTable td.troopType {text-align:left !important; width: 1% !important; white-space: nowrap !important;}
+	.resourceTable 			{table-layout: fixed !important; border-width: 0px !important; padding: 0px !important; width: auto !important;}
+	.resourceTable td 			{border-width: 0px !important; padding: 0px 0px 0px 7px!important; width: auto !important;}
+	.resourceTable td.resourceType	{text-align:left !important; width: 1% !important; white-space: nowrap !important;}
+	.resourceTable td.resourceCount {text-align: right !important;}
 	.RElog					{overflow-y:scroll; overflow-x:hidden; background: white; height: 200px;}
 	.REarmystale			{background: #abeaff !important;}
 	.REarmyreturn			{background: #ffcfcf !important;}
@@ -76,7 +80,7 @@
     {
         var y= new Array(new Array("Friesland","Lower Lorraine","Upper Lorraine","Burgundy"),new Array("Saxony","Franconia","Swabia","Lombardy"),new Array("North March","Thuringia","Bavaria","Tuscany"),new Array("Bohemia","Moravia","Carinthia","Romagna"));
         return y[Math.floor((x%800) / 200)][Math.floor((Math.floor(x/800)) / 200)];
-      }
+    }
     function troopbeantostring(x){
     	var y={'peasants':'wo','militia':'w','scouter':'s','pikemen':'p','swordsmen':'sw','archer':'a','carriage':'t','lightCavalry':'c','heavyCavalry':'cata','ballista':'b','batteringRam':'r','catapult':'cp'}
     	var g="";
@@ -107,6 +111,55 @@
     		}
     	}
     	return y;
+    }
+    function stringtoresourcebean(x){
+    	if ((x==null)||(x.trim()=="")){
+    		return (new Object());
+    	}
+    	var y=new Object();
+    	var w=x.split(',');
+    	for (var i=0;i<w.length;i++){
+    		var gt=w[i].trim().split(':');
+    		y[gt[0].trim()]=gt[1].trim();
+    	}
+    	return y;
+    }
+    function resourcebeantotable(x){
+    	if (x.g==null){
+    		return "";
+    	}
+    	var y=document.createElement("table");
+    	var r=y.insertRow(-1);
+    	var s=r.insertCell(-1);
+    	s.setAttribute("colspan","4");
+    	var r=y.insertRow(-1);
+    	r.insertCell(0);
+    	r.insertCell(0);
+    	r.insertCell(0);
+    	r.insertCell(0);
+    	var r=y.insertRow(-1);
+    	r.insertCell(0);
+    	r.insertCell(0);
+    	r.insertCell(0);
+    	r.insertCell(0);
+    	y.rows[1].cells[0].className='resourceType';
+    	y.rows[1].cells[2].className='resourceType';
+    	y.rows[2].cells[0].className='resourceType';
+    	y.rows[2].cells[2].className='resourceType';
+    	y.rows[1].cells[1].className='resourceCount';
+    	y.rows[1].cells[3].className='resourceCount';
+    	y.rows[2].cells[1].className='resourceCount';
+    	y.rows[2].cells[3].className='resourceCount';
+    	y.rows[0].cells[0].innerHTML='<pre style="margin: 0px;"><b>Gold:</b>   '+parseInt(x.g).toLocaleString()+"</pre>";
+    	y.rows[1].cells[0].innerHTML='<b>Food:</b>';
+    	y.rows[1].cells[1].innerHTML=parseInt(x.f).toLocaleString();
+    	y.rows[1].cells[2].innerHTML='<b>Wood:</b>';
+    	y.rows[1].cells[3].innerHTML=parseInt(x.w).toLocaleString();
+    	y.rows[2].cells[0].innerHTML='<b>Stone:</b>';
+    	y.rows[2].cells[1].innerHTML=parseInt(x.s).toLocaleString();
+    	y.rows[2].cells[2].innerHTML='<b>Iron:</b>';
+    	y.rows[2].cells[3].innerHTML=parseInt(x.i).toLocaleString();
+    	return ("<table class='resourceTable'>"+y.innerHTML+"</table>");
     }
     function troopbeantotable(x){
     	var z={'peasants':'wo','militia':'w','scouter':'s','pikemen':'p','swordsmen':'sw','archer':'a','carriage':'t','lightCavalry':'c','heavyCavalry':'cata','ballista':'b','batteringRam':'r','catapult':'cp'}
@@ -142,7 +195,7 @@
     		var ft=document.createElement("td");
     		cr.appendChild(ft);
     		ft.className='troopCount';
-    		ft.innerHTML=x[y[done]];
+    		ft.innerHTML=parseInt(x[y[done]]).toLocaleString();
     		done+=1;
     		cnum+=1;
     	}
@@ -151,6 +204,9 @@
     }
     function gettrooptable(x){
     	return troopbeantotable(stringtotroopbean(x));
+    }
+    function getresourcetable(x){
+    	return resourcebeantotable(stringtoresourcebean(x));
     }
     function armybeantostring(x,y){
     	var g="";
@@ -791,7 +847,7 @@
 			fgt.cells[0].setAttribute("value",xp[5]);
 			fgt.cells[0].timer=startblobtimer(fgt.cells[0]);
 			fgt.cells[1].innerHTML=xp[0];
-			fgt.cells[2].innerHTML=xp[1];
+			fgt.cells[2].innerHTML=getresourcetable(xp[1]);
 			fgt.cells[3].innerHTML=gettrooptable(xp[2]);
 			fgt.cells[4].innerHTML=xp[3];
 			fgt.cells[5].innerHTML="<button onclick='showaccountdetails(event)' value='"+xp[4]+"'>Show Details</button>";
@@ -813,7 +869,7 @@
 			fgt.cells[0].setAttribute("value",xp[5]);
 			fgt.cells[0].timer=startblobtimer(fgt.cells[0]);
 			fgt.cells[1].innerHTML=xp[0];
-			fgt.cells[2].innerHTML=xp[1];
+			fgt.cells[2].innerHTML=getresourcetable(xp[1]);
 			fgt.cells[3].innerHTML=gettrooptable(xp[2]);
 			fgt.cells[4].innerHTML=xp[3];
 			fgt.cells[5].innerHTML="<button onclick='showaccountdetails(event)' value='"+xp[4]+"'>Show Details</button>";

@@ -51,15 +51,30 @@ if ($rows>0){
 		$stm->close();
 	}
 	else{
-		$stm=$conn->prepare("DELETE FROM ACCOUNTS_SUMMARY WHERE NAME = ?;");
-		$stm->bind_param('s',$accname);
-		$stm->execute();
-		$stm->close();
-		$stm=$conn->prepare("UPDATE ACCOUNTS_SUMMARY SET NAME= ? , RESOURCES= ? , TROOPS= ? , ATTACKS= ? , LASTUPDATED = ? WHERE ID= ?");
-		$curtime=time();
-		$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$curtime,$id);
-		$stm->execute();
-		$stm->close();
+		$check=$conn->prepare("SELECT COUNT(*) FROM ACCOUNTS_SUMMARY WHERE NAME= ? ");
+		$check->bind_param('s',$accname);
+		$check->execute();
+		$check->bind_result($rows);
+		$check->fetch();
+		$check->close();
+		if ($rows>1){
+			$stm=$conn->prepare("DELETE FROM ACCOUNTS_SUMMARY WHERE NAME = ?;");
+			$stm->bind_param('s',$accname);
+			$stm->execute();
+			$stm->close();
+			$stm=$conn->prepare("INSERT INTO ACCOUNTS_SUMMARY (NAME , RESOURCES , TROOPS , ATTACKS , LASTUPDATED , ID) VALUES (?,?,?,?,?,?)");
+			$curtime=time();
+			$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$curtime,$id);
+			$stm->execute();
+			$stm->close();			
+		}
+		else{
+			$stm=$conn->prepare("UPDATE ACCOUNTS_SUMMARY SET NAME= ? , RESOURCES= ? , TROOPS= ? , ATTACKS= ? , LASTUPDATED = ? WHERE ID= ?");
+			$curtime=time();
+			$stm->bind_param('sssdsd',$accname,$resources,$troops,$attacks,$curtime,$id);
+			$stm->execute();
+			$stm->close();
+		}
 	}
 }
 else{

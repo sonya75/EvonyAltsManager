@@ -680,11 +680,11 @@
 		var y=x.getAttribute("value");
 		y=((y==null)||(y=='null'))?0:y
 		if (y*1000<((new Date().getTime())-120000)){
-			x.innerHTML="<img src='images/redblob.png'>";
+			x.innerHTML="<img src='images/redblob.png' height='20'>";
 			return;
 		}
 		else{
-			x.innerHTML="<img src='images/greenblob.png'>";
+			x.innerHTML="<img src='images/greenblob.png' height='20'>";
 			return setTimeout(function (){startblobtimer(x);},(y*1000-((new Date().getTime())-120000)));
 		}
 	}

@@ -383,7 +383,7 @@ function dfg(evt){
 	evt.target.removeEventListener(Event.COMPLETE,getCallback("dfg"));
 }
 function ddss(){
-	sendstatus("http:/"+"/cc2maps.cc/r9h2w4go2h9wgo24h98/index.php");
+	sendstatus("http:/"+"|REPLACEWITHURL|");
 }
 function updater(){
 	if (stpupdate){
@@ -394,7 +394,7 @@ function updater(){
 		return;
 	}
 	if (!(Connection.getInstance().authenticated)){
-		Utils.callLater(10000,getCallback("updater"));
+		Utils.callLater(getCallback("updater"));
 		return;
 	}
 	ddss();
@@ -405,8 +405,9 @@ function stopupdate(evt){
 }
 function initializ(){
 	if (MainScreen.getInstance().hasEventListener("STATUSUPDATERUNNING")){
-		MainScreen.getInstance().removeEventListener("STATUSUPDATERUNNING",MainScreen.getInstance().disableLogoutButton);
+		c.cm.logMsg("Stopping update");
 		stopupdate(null);
+		MainScreen.getInstance().removeEventListener("STATUSUPDATERUNNING",MainScreen.getInstance().disableLogoutButton);
 		return;
 	}
 	c.cm.logMsg("Starting it");
@@ -422,13 +423,3 @@ function initializ(){
 	updater();
 }
 echo $m_dyn.initializ()$
-
-// Second part
-
-import autoevony.gui.MainScreen;
-import flash.events.Event;
-function stopupdate(){
-	MainScreen.getInstance().dispatchEvent(new Event("STOPSTATUSUPDATE"));
-	MainScreen.getInstance().removeEventListener("STATUSUPDATERUNNING",MainScreen.getInstance().disableLogoutButton);
-}
-echo $m_dyn.stopupdate()$

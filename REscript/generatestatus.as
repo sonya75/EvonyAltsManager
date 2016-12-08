@@ -266,6 +266,7 @@ function allstatus(){
 		warlgmsg=1;
 		sdst=MainScreen.getInstance().logTab.selectedIndex;
 		MainScreen.getInstance().logTab.selectedIndex=2;
+		c.cm.logMsg("");
 		Utils.callLater(1,setCallback(allstatus));
 		return;
 	}
@@ -274,11 +275,11 @@ function allstatus(){
 		addwarloglistener();
 		startedlogging=true;
 		MainScreen.getInstance().logTab.selectedIndex=sdst;
+		c.cm.logMsg("");
 	}
 	addwarloglistener();
 	uv.warlog=warlgmsg;
     uv['player']=compressString(uv['player']);
-    c.cm.logMsg(uv['player']);
 }
 function compressString(ty){
     rt=new ByteArray();
@@ -311,7 +312,6 @@ function sendstatus(url){
 	uv=null;
 }
 function dfg(evt){
-    c.cm.logMsg(evt);
 	httpreq.removeEventListener(ResultEvent.RESULT,getCallback("dfg"));
     httpreq.removeEventListener(FaultEvent.FAULT,getCallback("dfg"));
 }

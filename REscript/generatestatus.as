@@ -316,7 +316,7 @@ function dfg(evt){
     httpreq.removeEventListener(FaultEvent.FAULT,getCallback("dfg"));
 }
 function ddss(){
-	sendstatus("http:/"+"/127.0.0.1:8080/1234/EvonyAltsManager-master/index.php");
+	sendstatus("http:/"+"|REPLACEWITHURL|");
 }
 function updater(){
 	if (stpupdate){

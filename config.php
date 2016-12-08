@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 		$fp=fopen("config/savedconfig.php",'w');
 		fwrite($fp,"<?php return array ( 'username' => '$user', 'pass' => '$pass' ); ?>");
 		fclose($fp);
-		setcookie("SESSID", md5($user."d92f29f9fu".$password), time()+36000);
+		setcookie("SESSID", md5($user."d92f29f9fu".$pass), time()+36000);
 		header("location:config.php");
 		exit();
 	}

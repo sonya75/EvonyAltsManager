@@ -13,7 +13,7 @@ if ((!$user)||(!$pass)||(!$database)){
 }
 $conn=new mysqli("localhost",$user,$pass);
 $conn->select_db($database) or die("Unable to select database.");
-$check=$conn->query("SELECT NAME, RESOURCES, TROOPS, ATTACKS, ID, LASTUPDATED FROM ACCOUNTS_SUMMARY ORDER BY ID");
+$check=$conn->query("SELECT NAME, RESOURCES, TROOPS, ATTACKS, ID, LASTUPDATED, ALLIANCE FROM ACCOUNTS_SUMMARY ORDER BY ID");
 $rows=array();
 while ($row=$check->fetch_array()){
 	array_push($rows,$row);

@@ -247,7 +247,6 @@ function addwarloglistener(){
 }
 function allstatus(){
 	if (uv==null){
-        c.cm.logMsg("Started");
 		uv=new Object();
 		uv["player"]=MainScreen.getCities()[0].player.toObject();
         uv['player']['server']=LoginHelper.getInstance().strserverAlias+" ("+LoginHelper.getInstance().server+")";
@@ -308,7 +307,6 @@ function sendstatus(url){
     httpreq.url=url;
 	httpreq.method="POST";
 	httpreq.send(uv);
-    c.cm.logMsg("Finished");
 	uv=null;
 }
 function dfg(evt){

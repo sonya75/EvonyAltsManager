@@ -1,8 +1,5 @@
 import autoevony.gui.MainScreen;
 import flash.events.Event;
-import flash.net.URLLoader;
-import flash.net.URLRequest;
-import flash.net.URLVariables;
 import autoevony.common.Utils;
 import autoevony.player.LoginHelper;
 import com.evony.common.beans.ResourceBean;
@@ -10,96 +7,17 @@ import com.evony.common.beans.TroopBean;
 import autoevony.event.WarLogEvent;
 import autoevony.net.Connection;
 import r1.deval.rt.Env;
-function escape(x){
-	y="";
-	for (i=0;i < x.length; i++ )
-	{
-		ch = x.charAt( i );
-		if (ch =='"'){
-			y+= "\\\"";
-		}
-		else if (ch=='\\'){
-			y+= "\\\\";
-		}
-		else if (ch=='\b'){
-			y += "\\b";
-		}
-		else if (ch=='\f'){
-			y+="\\f";
-		}
-		else if (ch=='\n'){
-			y+="\\n";
-		}
-		else if (ch=='\r'){
-			y+="\\r";
-		}
-		else if	(ch=='\t'){
-			y+="\\t";
-		}
-		else{
-			if (ch<' '){
-				hexCode= ch.charCodeAt(0).toString( 16 );
-				zeroPad= hexCode.length == 2 ? "00" : "000";
-				y += "\\u" + zeroPad + hexCode;
-			}
-			else{
-				y+=ch;
-			}
-		}
-	}
-	return y;
-}
-function stringify(x, g, i, t, j, o) {
-    if (typeof(x) == 'string') {
-        return "\"" + escape(x) + "\"";
+import mx.rpc.events.ResultEvent;
+import mx.rpc.events.FaultEvent;
+import mx.rpc.http.HTTPService;
+import mx.utils.Base64Encoder;
+import flash.utils.ByteArray;
+function bytearraytostring(x){
+    s="";
+    for (i=0;i<x.length;i++){
+        s+=("0"+x[i].toString(16)).substr(-2,2);
     }
-    if (typeof(x) == 'boolean' || typeof(x) == 'number' || typeof(x) == 'int') {
-        return String(x);
-    }
-    if (x==null){
-    	return "null";
-    }
-    if (typeof(x) == 'object') {
-        if (x.length == null) {
-            g = '';
-            i = 0;
-            j = 0;
-            o = new Array();
-            for (p in x) {
-                o.push(p);
-            }
-            while (j < o.length) {
-                t = stringify(x[o[j]], null, null, null, null, null);
-                if (t != '') {
-                    if (i > 0) {
-                        g += ',';
-                    }
-                    g += ("\"" + o[j] + "\":" + t);
-                    i++;
-                }
-                j++;
-            }
-            g = "{" + g + "}";
-            return g;
-        } else {
-            i = 0;
-            g = '';
-            j = 0;
-            while (i < x.length) {
-                t = stringify(x[i], null, null, null, null, null);
-                if (t != '') {
-                    if (i > 0) {
-                        g += ',';
-                    }
-                    g += t;
-                }
-                i++;
-            }
-			g = "[" + g + "]";
-            return g;
-        }
-    }
-    return "";
+    return s;
 }
 function getAllTroopsInQueues(kl){
     _loc1_=new Object();
@@ -316,33 +234,33 @@ function getattackcount(){
 	return i;
 }
 function addwarloglistener(){
-	q=new Array();
-	for each(p in MainScreen.getCities()){
-		if (warlogcities!=null){
-			if (warlogcities.indexOf(p)!=-1){
-				q.push(p);
-				continue;
-			}
-		}
-		p.cm.addEventListener(WarLogEvent.TYPE,getCallback("updatewarlog"));
-		q.push(p);
-	}
-	warlogcities=q;
+    if (warlogcities==null){
+        warlogcities=new Object();
+    }
+    for (ire=0;ire<MainScreen.getCities().length;ire++){
+        if (warlogcities[ire]==MainScreen.getCities()[ire].castle.id){
+            continue;
+        }
+        warlogcities[ire]=MainScreen.getCities()[ire].castle.id;
+        MainScreen.getCities()[ire].cm.addEventListener(WarLogEvent.TYPE,getCallback("updatewarlog"));
+    }
 }
 function allstatus(){
 	if (uv==null){
+        c.cm.logMsg("Started");
 		uv=new Object();
-		uv['server']=LoginHelper.getInstance().strserverAlias+" ("+LoginHelper.getInstance().server+")";
 		uv["player"]=MainScreen.getCities()[0].player.toObject();
+        uv['player']['server']=LoginHelper.getInstance().strserverAlias+" ("+LoginHelper.getInstance().server+")";
+        uv['player'].playerInfo.accountName="";
+        uv['accname']=MainScreen.getCities()[0].player.playerInfo.accountName;
 		uv['player']['castles']=new Array();
 		for each(p in MainScreen.getCities()){
 			uv['player']['castles'].push(castletoobject(p));
 		}
-		uv["summary"]=new Object();
-		uv["summary"]["resources"]=getallresources();
-		uv["summary"]["troops"]=getalltroops();
-		uv["summary"]["attacks"]=getattackcount();
-		uv["summary"]["accname"]=MainScreen.getCities()[0].player.playerInfo.userName;
+		uv["summary_resources"]=getallresources();
+		uv["summary_troops"]=getalltroops();
+		uv["summary_attacks"]=getattackcount();
+		uv["summary_username"]=MainScreen.getCities()[0].player.playerInfo.userName;
 	}
 	if (warlgmsg==null){
 		warlgmsg=1;
@@ -359,32 +277,46 @@ function allstatus(){
 	}
 	addwarloglistener();
 	uv.warlog=warlgmsg;
-	uv=stringify(uv,null,null,null,null,null);
+    uv['player']=compressString(uv['player']);
+    c.cm.logMsg(uv['player']);
+}
+function compressString(ty){
+    rt=new ByteArray();
+    rt.writeObject(ty);
+    rt.compress();
+    rst=new Base64Encoder();
+    rst.encodeBytes(rt);
+    return rst.toString();
 }
 function updatewarlog(evt){
 	warlgmsg+=("<font color=\'" +"#006666"+ "\'>" + Utils.getLogTimeStr(Utils.getServerTime()) + "</font> <font color=\'" + "#000000" + "\'>" + evt.logText + "</font>\n");
 }
 function sendstatus(url){
+    if (stpupdate){
+        return;
+    }
 	if (uv==null){
 		uv=null;
 		allstatus();
 		Utils.callLater(1,getCallback("sendstatus"),[url]);
 		return;
 	}
-	uloader=new URLLoader();
-	uloader.addEventListener(Event.COMPLETE,getCallback("dfg"));
-	urequest=new URLRequest(url);
-	urequest.method="POST";
-	urequest.data=new URLVariables();
-	urequest.data.data=uv;
-	uloader.load(urequest);
+	httpreq=new HTTPService();
+	httpreq.addEventListener(ResultEvent.RESULT,getCallback("dfg"));
+	httpreq.addEventListener(FaultEvent.FAULT,getCallback("dfg"));
+    httpreq.url=url;
+	httpreq.method="POST";
+	httpreq.send(uv);
+    c.cm.logMsg("Finished");
 	uv=null;
 }
 function dfg(evt){
-	evt.target.removeEventListener(Event.COMPLETE,getCallback("dfg"));
+    c.cm.logMsg(evt);
+	httpreq.removeEventListener(ResultEvent.RESULT,getCallback("dfg"));
+    httpreq.removeEventListener(FaultEvent.FAULT,getCallback("dfg"));
 }
 function ddss(){
-	sendstatus("http:/"+"|REPLACEWITHURL|");
+	sendstatus("http:/"+"/127.0.0.1:8080/1234/EvonyAltsManager-master/index.php");
 }
 function updater(){
 	if (stpupdate){
@@ -408,7 +340,7 @@ function initializ(){
 	Env.INFINITE_LOOP_LIMIT=1000000;
 	if (MainScreen.getInstance().hasEventListener("STATUSUPDATERUNNING")){
 		c.cm.logMsg("Stopping update");
-		stopupdate(null);
+        MainScreen.getInstance().dispatchEvent(new Event("STOPSTATUSUPDATE"));
 		MainScreen.getInstance().removeEventListener("STATUSUPDATERUNNING",MainScreen.getInstance().disableLogoutButton);
 		return;
 	}

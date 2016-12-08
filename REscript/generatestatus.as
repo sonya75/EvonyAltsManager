@@ -12,13 +12,6 @@ import mx.rpc.events.FaultEvent;
 import mx.rpc.http.HTTPService;
 import mx.utils.Base64Encoder;
 import flash.utils.ByteArray;
-function bytearraytostring(x){
-    s="";
-    for (i=0;i<x.length;i++){
-        s+=("0"+x[i].toString(16)).substr(-2,2);
-    }
-    return s;
-}
 function getAllTroopsInQueues(kl){
     _loc1_=new Object();
     troopIntNames=new Array("","","peasants","militia","scouter","pikemen","swordsmen","archer","carriage","lightCavalry","heavyCavalry","ballista","batteringRam","catapult","","","","","");

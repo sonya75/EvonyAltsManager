@@ -150,15 +150,15 @@
     	y.rows[1].cells[3].className='resourceCount';
     	y.rows[2].cells[1].className='resourceCount';
     	y.rows[2].cells[3].className='resourceCount';
-    	y.rows[0].cells[0].innerHTML='<pre style="margin: 0px;"><b>Gold:</b>   '+parseInt(x.g).toLocaleString()+"</pre>";
+    	y.rows[0].cells[0].innerHTML='<pre style="margin: 0px;"><b>Gold:</b>   '+abbrNum(parseInt(x.g))+"</pre>";
     	y.rows[1].cells[0].innerHTML='<b>Food:</b>';
-    	y.rows[1].cells[1].innerHTML=parseInt(x.f).toLocaleString();
+    	y.rows[1].cells[1].innerHTML=abbrNum(parseInt(x.f));
     	y.rows[1].cells[2].innerHTML='<b>Wood:</b>';
-    	y.rows[1].cells[3].innerHTML=parseInt(x.w).toLocaleString();
+    	y.rows[1].cells[3].innerHTML=abbrNum(parseInt(x.w));
     	y.rows[2].cells[0].innerHTML='<b>Stone:</b>';
-    	y.rows[2].cells[1].innerHTML=parseInt(x.s).toLocaleString();
+    	y.rows[2].cells[1].innerHTML=abbrNum(parseInt(x.s));
     	y.rows[2].cells[2].innerHTML='<b>Iron:</b>';
-    	y.rows[2].cells[3].innerHTML=parseInt(x.i).toLocaleString();
+    	y.rows[2].cells[3].innerHTML=abbrNum(parseInt(x.i));
     	return ("<table class='resourceTable'>"+y.innerHTML+"</table>");
     }
     function troopbeantotable(x){
@@ -315,6 +315,44 @@
 			generatecitytabs();
 		});},10000);
 	}
+    function roundAmount(param1, param2)
+      {
+         var _loc3_ = 1.0e-8;
+         if(param1 <= 0)
+         {
+            return 0;
+         }
+         var _loc4_ = Math.log(param1) / Math.LN10 + _loc3_;
+         var _loc5_ = Math.floor(_loc4_);
+         return Math.floor(Math.pow(10,_loc4_ - _loc5_ + param2 - 1)) * Math.pow(10,_loc5_ - param2 + 1);
+      }
+    function abbrNum(param1)
+      {
+         var _loc2_ = "";
+         if(param1 < 0)
+         {
+            _loc2_ = "-";
+            param1 = -param1;
+         }
+         param1 = roundAmount(param1,3);
+         if(param1 >= 1000000000000)
+         {
+            return _loc2_ + param1 / 1000000000000 + "t";
+         }
+         if(param1 >= 1000000000)
+         {
+            return _loc2_ + param1 / 1000000000 + "b";
+         }
+         if(param1 >= 1000000)
+         {
+            return _loc2_ + param1 / 1000000 + "m";
+         }
+         if(param1 >= 1000)
+         {
+            return _loc2_ + param1 / 1000 + "k";
+         }
+         return _loc2_ + param1 / 1 + "";
+      }
 	function showaccountdetails(evt){
 		document.getElementById("overlay").style.display="block";
 		var evt=evt || window.event;
@@ -841,16 +879,18 @@
 				d.insertCell(-1);
 				d.insertCell(-1);
 				d.insertCell(-1);
+                d.insertCell(-1);
 			}
 			var fgt=document.getElementById("summary").rows[i+1];
 			fgt.className="UnderAttack";
 			fgt.cells[0].setAttribute("value",xp[5]);
 			fgt.cells[0].timer=startblobtimer(fgt.cells[0]);
 			fgt.cells[1].innerHTML=xp[0];
-			fgt.cells[2].innerHTML=getresourcetable(xp[1]);
-			fgt.cells[3].innerHTML=gettrooptable(xp[2]);
-			fgt.cells[4].innerHTML=xp[3];
-			fgt.cells[5].innerHTML="<button onclick='showaccountdetails(event)' value='"+xp[4]+"'>Show Details</button>";
+            fgt.cells[2].innerHTML=xp[6];
+			fgt.cells[3].innerHTML=getresourcetable(xp[1]);
+			fgt.cells[4].innerHTML=gettrooptable(xp[2]);
+			fgt.cells[5].innerHTML=xp[3];
+			fgt.cells[6].innerHTML="<button onclick='showaccountdetails(event)' value='"+xp[4]+"'>Show Details</button>";
 		}
 		for (;i<y2.length+y1.length;i++){
 			var xp=y2[i-y1.length];
@@ -863,16 +903,18 @@
 				d.insertCell(-1);
 				d.insertCell(-1);
 				d.insertCell(-1);
+                d.insertCell(-1);
 			}
 			var fgt=document.getElementById("summary").rows[i+1];
 			fgt.className="";
 			fgt.cells[0].setAttribute("value",xp[5]);
 			fgt.cells[0].timer=startblobtimer(fgt.cells[0]);
 			fgt.cells[1].innerHTML=xp[0];
-			fgt.cells[2].innerHTML=getresourcetable(xp[1]);
-			fgt.cells[3].innerHTML=gettrooptable(xp[2]);
-			fgt.cells[4].innerHTML=xp[3];
-			fgt.cells[5].innerHTML="<button onclick='showaccountdetails(event)' value='"+xp[4]+"'>Show Details</button>";
+            fgt.cells[2].innerHTML=xp[6];
+			fgt.cells[3].innerHTML=getresourcetable(xp[1]);
+			fgt.cells[4].innerHTML=gettrooptable(xp[2]);
+			fgt.cells[5].innerHTML=xp[3];
+			fgt.cells[6].innerHTML="<button onclick='showaccountdetails(event)' value='"+xp[4]+"'>Show Details</button>";
 		}
 		for (;(i+1)<document.getElementById("summary").rows.length;){
 			document.getElementById("summary").removeChild(document.getElementById("summary").rows[i+1]);
@@ -1559,9 +1601,10 @@
 <table id="summary" class="Summarytable">
 <tr>
 	<th></th>
-	<th style="width: 15%">Name</th>
-	<th style="width: 30%">Resources</th>
-	<th style="width: 30%">Troops</th>
+	<th style="width: 10%">Name</th>
+    <th style="width: 10%">Alliance</th>
+	<th style="min-width: 250px">Resources</th>
+	<th>Troops</th>
 	<th style="width: 15%">Incoming Attacks</th>
 	<th style="width: 10%"></th>
 </tr>

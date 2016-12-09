@@ -57,7 +57,7 @@ if ($rows>0){
 	$stm->close();
 }
 else{
-	$stm=$conn->prepare("INSERT INTO ACCOUNTS_SUMMARY (NAME, ALLIANCE, RESOURCES, TROOPS, ATTACKS, ID, LASTUPDATED ) VALUES ( ? , ? , ? , ? , ? , ? )");
+	$stm=$conn->prepare("INSERT INTO ACCOUNTS_SUMMARY (NAME, ALLIANCE, RESOURCES, TROOPS, ATTACKS, ID, LASTUPDATED ) VALUES ( ? , ? , ? , ? , ? , ? , ?)");
 	$curtime=time();
 	$stm->bind_param('ssssdsd',$username,$alliance,$resources,$troops,$attacks,$id,$curtime);
 	$stm->execute();

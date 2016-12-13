@@ -1,4 +1,5 @@
 <?php
+ob_start();
 $info=include("config/savedconfig.php");
 if (!($info)){
 	header("location:config.php");

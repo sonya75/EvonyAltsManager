@@ -1,4 +1,5 @@
 <?php
+ob_start();
 error_reporting(0);
 $var = include("config/savedconfig.php");
 $user=$var['username'];

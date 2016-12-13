@@ -1,4 +1,5 @@
 <?php
+ob_start();
 error_reporting(0);
 $nam = $_GET["id"];
 $fp=fopen("playerdata/".$nam.".json",'r');

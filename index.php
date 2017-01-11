@@ -47,9 +47,9 @@ $deserializer = new AMFDeserializer($amf->rawData);
 $json=($deserializer->readAmf3Data());
 $js= array();
 $js['player']=$json;
-$js['server']=$json['server'];
+$js['server']=isset($json['server'])?$json['server']:$_POST['server'];
 $js['warlog']=$_POST['warlog'];
-$alliance=$json['playerInfo']['alliance'];
+$alliance=isset($json['playerInfo']['alliance'])?$json['playerInfo']['alliance']:'';
 if ($rows>0){
 	$stm=$conn->prepare("UPDATE ACCOUNTS_SUMMARY SET NAME= ? , ALLIANCE= ?, RESOURCES= ? , TROOPS= ? , ATTACKS= ? , LASTUPDATED = ? WHERE ID= ?");
 	$curtime=time();

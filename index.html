@@ -415,14 +415,18 @@
 			var ty=PlayerData.player.castles[i];
 			var classn=getTabByFieldId(ty.fieldId).className;
 			var classnam="REtab";
+			if (!(ty.colonies)) ty.colonies=ty.colonyBeans;
 			for (var j=0;j<ty.colonies.length;j++){
 				if (ty.colonies[i].status==1||ty.colonies[i].status==3){
 					var classnam="REtabColonyEvent";
 				}
 			}
+			ty.enemyArmies=ty.enemyArmies?ty.enemyArmies:(new Array());
 			if (ty.enemyArmies.length>0){
 				var classnam="REtabUnderAttack";
 			}
+			if (!(ty.enemyColonyArmies)) ty.enemyColonyArmies=new Array();
+			if (!(ty.enemyValleyArmies)) ty.enemyValleyArmies=new Array();
 			if (ty.enemyColonyArmies.length>0||ty.enemyValleyArmies.length>0){
 				var classnam="REtabColonyUnderAttack";
 			}
@@ -474,6 +478,7 @@
     	for (var i=0;i<troopIntNames.length;i++){
     		t[troopIntNames[i]]=0;
     	}
+		if (!(x.friendlyArmies)) x.friendlyArmies=new Array();
     	for (var i=0;i<x.friendlyArmies.length;i++){
     		if (x.friendlyArmies[i].direction==3){
     			for (var j=0;j<troopIntNames.length;j++){
@@ -483,6 +488,26 @@
     	}
     	return t;
     }
+	function getAllTroopsInQueues(kl){
+    var _loc1_=new Object();
+    var troopIntNames=new Array("","","peasants","militia","scouter","pikemen","swordsmen","archer","carriage","lightCavalry","heavyCavalry","ballista","batteringRam","catapult","","","","","");
+    for (var p in troopIntNames){
+		p=troopIntNames[p];
+    	if (p!=''){
+    		_loc1_[p]=0;
+    	}
+    }
+    for (var _loc4_ in kl)
+    {
+		_loc4_=kl[_loc4_];
+    	for (var _loc5_ in _loc4_.allProduceQueueArray)
+            {
+				_loc5_=_loc4.allProduceQueueArray[_loc5_];
+                 _loc1_[troopIntNames[_loc5_.type]] = _loc1_[troopIntNames[_loc5_.type]] + _loc5_.num;
+            }
+         }
+         return _loc1_;
+      }
 	function updatedata(id){
 	for (var i=0;i<PlayerData.player.castles.length;i++){
 		if (PlayerData.player.castles[i].fieldId==id){
@@ -561,6 +586,7 @@
 				}
 			}
 			var x=document.getElementById("troops");
+			ty.availableTroop=ty.availableTroop?ty.availableTroop:ty.troop;
 			x.rows[1].cells[1].innerHTML=ty.availableTroop.peasants.toLocaleString();
 			x.rows[2].cells[1].innerHTML=ty.availableTroop.militia.toLocaleString();
 			x.rows[3].cells[1].innerHTML=ty.availableTroop.scouter.toLocaleString();
@@ -610,6 +636,7 @@
 			x.rows[10].cells[4].innerHTML=fcd.ballista.toLocaleString();
 			x.rows[11].cells[4].innerHTML=fcd.batteringRam.toLocaleString();
 			x.rows[12].cells[4].innerHTML=fcd.catapult.toLocaleString();
+			if (!(ty.troopProduceQueue)) ty.troopProduceQueue=getAllTroopsInQueues(ty.troopqueued);
 			x.rows[1].cells[5].innerHTML=ty.troopProduceQueue.peasants.toLocaleString();
 			x.rows[2].cells[5].innerHTML=ty.troopProduceQueue.militia.toLocaleString();
 			x.rows[3].cells[5].innerHTML=ty.troopProduceQueue.scouter.toLocaleString();
@@ -641,13 +668,15 @@
 			x.rows[3].cells[1].innerHTML=ty.fortification.arrowTower.toLocaleString();
 			x.rows[4].cells[1].innerHTML=ty.fortification.rollingLogs.toLocaleString();
 			x.rows[5].cells[1].innerHTML=ty.fortification.rockfall.toLocaleString();
+			if (ty.fortificationProduceQueue){
 			x.rows[1].cells[2].innerHTML=ty.fortificationProduceQueue.trap.toLocaleString();
 			x.rows[2].cells[2].innerHTML=ty.fortificationProduceQueue.abatis.toLocaleString();
 			x.rows[3].cells[2].innerHTML=ty.fortificationProduceQueue.arrowTower.toLocaleString();
 			x.rows[4].cells[2].innerHTML=ty.fortificationProduceQueue.rollingLogs.toLocaleString();
-			x.rows[5].cells[2].innerHTML=ty.fortificationProduceQueue.rockfall.toLocaleString();
+			x.rows[5].cells[2].innerHTML=ty.fortificationProduceQueue.rockfall.toLocaleString();}
 			var x=document.getElementById("gears");
 			var GEARING_BONUSES=[0,0.4,0.75,1,1.32,1.74,2.3,3.04,4.01,5.29,6.98,9.22,12.17,16.06,21.2,27.98];
+			if (!(ty.gears)) ty.gears=new Array();
 			for (var j=0;j<ty.gears.length;j++){
 				x.rows[ty.gears[j]['typeId']].cells[1].innerHTML=ty.gears[j].avalevel+"/"+ty.gears[j].level;
 				x.rows[ty.gears[j].typeId].cells[2].innerHTML=ty.gears[j].enhancedstarlv;
@@ -655,9 +684,12 @@
 				x.rows[ty.gears[j].typeId].cells[4].setAttribute("value",ty.gears[j].endTime);
 			}
 			var x=document.getElementById("valleys");
+			if (ty.fieldsArray){
 			for (var j=ty.fieldsArray.length+1;j<x.rows.length;){
 				x.removeChild(x.rows[j]);
 			}
+			}
+			if (ty.fieldsArray){
 			for (var j=0;j<ty.fieldsArray.length;j++){
 				if (x.rows[j+1]==null){
 					var ght=document.createElement("tr");
@@ -672,7 +704,9 @@
 				x.rows[j+1].cells[2].innerHTML=ty.fieldsArray[j].level;
 				x.rows[j+1].cells[3].innerHTML=getdistance(ty.fieldsArray[j].id,id).toLocaleString();
 			}
+			}
 			var x=document.getElementById("colonies");
+			if (ty.colonies){
 			for (var j=ty.colonies.length+1;j<x.rows.length;){
 				x.removeChild(x.rows[j]);
 			}
@@ -693,7 +727,9 @@
 				x.rows[j+1].cells[3].innerHTML=(ty.colonies[j].relation==3)?"colony":"suzerain";
 				x.rows[j+1].cells[4].setAttribute("value",ty.colonies[j].endTime);
 			}
+			}
 			var x=document.getElementById("localarmies");
+			if (ty.localarmies){
 			for (var j=ty.localarmies.length+1;j<x.rows.length;){
 				x.removeChild(x.rows[j]);
 			}
@@ -714,7 +750,9 @@
 				x.rows[j+1].cells[1].innerHTML=ty.localarmies[j].targetPosName+" at "+getcoord(ty.localarmies[j].targetFieldId);
 				x.rows[j+1].className=ty.localarmies[j].direction!=1?ty.localarmies[j].direction!=2?"REarmystale":"REarmyreturn":"REarmy"+missionconstants[ty.localarmies[j].missionType];
 			}
+			}
 			var x=document.getElementById("incomingarmies");
+			if (ty.selfArmies){
 			for (var j=ty.selfArmies.length+ty.friendlyArmies.length+ty.enemyArmies.length+ty.enemyValleyArmies.length+ty.enemyColonyArmies.length+1;j<x.rows.length;){
 				x.removeChild(x.rows[j]);
 			}
@@ -797,6 +835,7 @@
 				x.rows[ty.selfArmies.length+ty.friendlyArmies.length+ty.enemyValleyArmies.length+ty.enemyArmies.length+j+1].cells[2].innerHTML=armybeantostring(ty.enemyColonyArmies[j],true);
 				x.rows[ty.selfArmies.length+ty.friendlyArmies.length+ty.enemyValleyArmies.length+ty.enemyArmies.length+j+1].cells[3].setAttribute("value",ty.enemyColonyArmies[j].reachTime);
 				x.rows[ty.selfArmies.length+ty.friendlyArmies.length+ty.enemyValleyArmies.length+ty.enemyArmies.length+j+1].className="REarmy"+missionconstants[ty.enemyColonyArmies[j].missionType];
+			}
 			}
 			buildingtypes=[0,32,1,2,4,5,6,7,20,22,23,21,24,25,26,27,28,29,3,30,31];
 			var x=document.getElementById("buildings");

@@ -12,193 +12,6 @@ import mx.rpc.events.FaultEvent;
 import mx.rpc.http.HTTPService;
 import mx.utils.Base64Encoder;
 import flash.utils.ByteArray;
-function getAllTroopsInQueues(kl){
-    _loc1_=new Object();
-    troopIntNames=new Array("","","peasants","militia","scouter","pikemen","swordsmen","archer","carriage","lightCavalry","heavyCavalry","ballista","batteringRam","catapult","","","","","");
-    for each(p in troopIntNames){
-    	if (p!=''){
-    		_loc1_[p]=0;
-    	}
-    }
-    _loc2_=Utils.getServerTime();
-    for each(_loc4_ in kl.cm.troopProduceQueue)
-    {
-    	_loc3_ = -1;
-    	for each(_loc5_ in _loc4_.allProduceQueueArray)
-            {
-               if(_loc3_ == -1)
-               {
-                  _loc3_ = _loc5_.endTime;
-               }
-               else
-               {
-                  _loc3_ = _loc3_ + _loc5_.costTime * 1000;
-               }
-               if(_loc3_ >= _loc2_ + 1000)
-               {
-                  _loc1_[troopIntNames[_loc5_.type]] = _loc1_[troopIntNames[_loc5_.type]] + _loc5_.num;
-               }
-            }
-         }
-         return _loc1_;
-      }
-function researchtoobject(x)
-	      {
-         return {
-            "avalevel":x.avalevel,
-            "castleId":x.castleId,
-            "conditionBean":(x.conditionBean?x.conditionBean.toObject():(new Object())),
-            "endTime":x.endTime,
-            "enhancedstarlv":x.enhancedstarlv,
-            "help":x.help,
-            "level":x.level,
-            "startTime":x.startTime,
-            "typeId":x.typeId,
-            "permition":x.permition,
-            "upgradeing":x.upgradeing
-         };
-      }
-
-function getAllFortificationInQueues(kl){
-    _loc1_=new Object();
-    troopIntNames=new Array("","","","","","","","","","","","","","","trap","abatis","arrowTower","rollingLogs","rockfall");
-    for each(p in troopIntNames){
-    	if (p!=''){
-    		_loc1_[p]=0;
-    	}
-    }
-    _loc2_=Utils.getServerTime();
-    for each(_loc4_ in kl.cm.fortificationProduceQueue)
-    {
-    	_loc3_ = -1;
-    	for each(_loc5_ in _loc4_.allProduceQueueArray)
-            {
-               if(_loc3_ == -1)
-               {
-                  _loc3_ = _loc5_.endTime;
-               }
-               else
-               {
-                  _loc3_ = _loc3_ + _loc5_.costTime * 1000;
-               }
-               if(_loc3_ >= _loc2_ + 1000)
-               {
-                  _loc1_[troopIntNames[_loc5_.type]] = _loc1_[troopIntNames[_loc5_.type]] + _loc5_.num;
-               }
-            }
-         }
-         return _loc1_;
-      }
-function armybeantoobject(x)
-      {
-         return {
-            "alliance":x.alliance,
-            "armyId":x.armyId,
-            "direction":this.direction,
-            "hero":x.hero,
-            "heroLevel":x.heroLevel,
-            "heroid":x.heroid,
-            "king":x.king,
-            "missionType":x.missionType,
-            "reachTime":x.reachTime,
-            "resource":(x.resource?x.resource.toObject():(new Object())),
-            "restTime":x.restTime,
-            "startFieldId":x.startFieldId,
-            "startPosName":x.startPosName,
-            "startTime":x.startTime,
-            "targetFieldId":x.targetFieldId,
-            "targetPosName":x.targetPosName,
-            "troop":(x.troop?x.troop.toObject():(new Object())),
-            "selected":x.selected
-         };
-      }
-function castletoobject(kl){
-	k=kl.castle;
-	xp= {
-            "colonization":k.colonization,
-            "fieldId":k.fieldId,
-            "fortification":kl.cm.fortification.toObject(),
-            "icon":k.icon,
-            "id":k.id,
-            "logUrl":k.logUrl,
-            "name":k.name,
-            "powerlevel":k.powerlevel,
-            "resource":kl.cm.resource.toObject(),
-            "status":k.status,
-            "troop":kl.cm.allTroop.toObject(),
-            "usePACIFY_SUCCOUR_OR_PACIFY_PRAY":k.usePACIFY_SUCCOUR_OR_PACIFY_PRAY,
-            "zoneId":k.zoneId,
-            "allowAlliance":k.allowAlliance,
-            "canChangeIcon":k.canChangeIcon,
-            "goOutForBattle":k.goOutForBattle,
-            "hasEnemy":k.hasEnemy,
-            "availableTroop":kl.cm.troop.toObject()
-         };
-    xp.colonies=new Array();
-    for each(hty in kl.cm.colonies){
-    	htr=hty.toObject();
-    	htr[".prestige"]=null;
-    	htr.prestige=hty.prestige;
-    	xp.colonies.push(htr);
-    }
-    xp.troopProduceQueue=getAllTroopsInQueues(kl);
-    xp.fortificationProduceQueue=getAllFortificationInQueues(kl);
-    xp.selfArmies=new Array();
-    for each(hty in kl.cm.selfArmies){
-    	if (hty.targetFieldId==(c.getValue("Coordinate",kl.coord)) && hty.direction==1){
-    		xp.selfArmies.push(armybeantoobject(hty));
-    	}
-    }
-    xp.friendlyArmies=new Array();
-    for each(hty in kl.cm.friendlyArmies){
-    	xp.friendlyArmies.push(armybeantoobject(hty));
-    }
-    xp.enemyArmies=new Array();
-    for each(hty in kl.cm.enemyArmies){
-    	xp.enemyArmies.push(armybeantoobject(hty));
-    }
-    xp.enemyValleyArmies=new Array();
-    for each(hty in kl.cm.enemyValleyArmies){
-    	xp.enemyValleyArmies.push(armybeantoobject(hty));
-    }
-    xp.enemyColonyArmies=new Array();
-    for each(hty in kl.cm.enemyColonyArmies){
-    	xp.enemyColonyArmies.push(armybeantoobject(hty));
-    }
-    xp.localarmies=new Array();
-    for each(hty in kl.cm.localArmies){
-    	xp.localarmies.push(armybeantoobject(hty));
-    }
-    xp.herosArray=new Array();
-    for each(hty in kl.cm.heroes){
-    	xp.herosArray.push(hty.toObject());
-    }
-    xp.fieldsArray=new Array();
-    for each(hty in fcm.fields){
-    	xp.fieldsArray.push(hty.toObject());
-    }
-    xp.buildings=new Array();
-    for each(hty in kl.cm.buildings){
-    	xp.buildings.push(hty.toObject());
-    }
-    xp.buildingQueuesArray=new Array();
-    for each(hty in k.buildingQueuesArray){
-    	xp.buildingQueuesArray.push(hty.toObject());
-    }
-    xp.buffsArray=new Array();
-    for each(hty in k.buffsArray){
-    	xp.buffsArray.push(hty.toObject());
-    }
-    xp.researches=new Array();
-    for each(hty in kl.cm.researches){
-    	xp.researches.push(researchtoobject(hty));
-    }
-    xp.gears=new Array();
-    for each(hty in kl.cm.gears){
-    	xp.gears.push(researchtoobject(hty));
-    }
-    return xp;
-}
 function getallresources(){
 	y=new Object();
 	for each(x in MainScreen.getCities()){
@@ -228,50 +41,49 @@ function getattackcount(){
 }
 function addwarloglistener(){
     if (warlogcities==null){
-        warlogcities=new Object();
+        warlogcities=new Array();
     }
-    for (ire=0;ire<MainScreen.getCities().length;ire++){
-        if (warlogcities[ire]==MainScreen.getCities()[ire].castle.id){
-            continue;
+    for (q=0;q<warlogcities.length;q++){
+        for each(p in MainScreen.getCities()){
+            if (p==warlogcities[q]){
+                continue;
+            }
+            warlogcities.splice(q,1);
         }
-        warlogcities[ire]=MainScreen.getCities()[ire].castle.id;
-        MainScreen.getCities()[ire].cm.addEventListener(WarLogEvent.TYPE,getCallback("updatewarlog"));
+    }
+    for each(p in MainScreen.getCities()){
+        if (warlogcities.indexOf(p)==-1){
+            p.cm.addEventListener(WarLogEvent.TYPE,getCallback("updatewarlog"));
+        }
     }
 }
 function allstatus(){
-	if (uv==null){
-		uv=new Object();
-		uv["player"]=MainScreen.getCities()[0].player.toObject();
-        uv['player']['server']=LoginHelper.getInstance().strserverAlias+" ("+LoginHelper.getInstance().server+")";
-        uv['player'].playerInfo.accountName="";
-        uv['accname']=MainScreen.getCities()[0].player.playerInfo.accountName;
-		uv['player']['castles']=new Array();
-		for each(p in MainScreen.getCities()){
-			uv['player']['castles'].push(castletoobject(p));
-		}
-		uv["summary_resources"]=getallresources();
-		uv["summary_troops"]=getalltroops();
-		uv["summary_attacks"]=getattackcount();
-		uv["summary_username"]=MainScreen.getCities()[0].player.playerInfo.userName;
-	}
-	if (warlgmsg==null){
-		warlgmsg=1;
-		sdst=MainScreen.getInstance().logTab.selectedIndex;
-		MainScreen.getInstance().logTab.selectedIndex=2;
-		c.cm.logMsg("");
-		Utils.callLater(1,setCallback(allstatus));
-		return;
-	}
-	if (startedlogging==null){
-		warlgmsg=MainScreen.getInstance().logs.htmlText;
-		addwarloglistener();
-		startedlogging=true;
-		MainScreen.getInstance().logTab.selectedIndex=sdst;
-		c.cm.logMsg("");
-	}
-	addwarloglistener();
-	uv.warlog=warlgmsg;
-    uv['player']=compressString(uv['player']);
+	uv=new Object();
+	uv["player"]=c.player.toObject();
+    for each(p in uv.player.castlesArray){
+        q=MainScreen.getCityStateFromCastleId(p.id);
+        p.researches=MainScreen.getCityStateFromCastleId(p.id).cm.researches;
+        p.enemyArmies=q.cm.enemyArmies;
+        p.enemyValleyArmies=q.cm.enemyValleyArmies;
+        p.enemyColonyArmies=q.cm.enemyColonyArmies;
+        p.friendlyArmies=q.cm.friendlyArmies;
+        p.troop=q.cm.allTroop;
+        p.availableTroop=q.cm.troop;
+        p.fortificationProduceQueue=q.cm.fortificationProduceQueue;
+        p.troopProduceQueue=q.cm.troopProduceQueue;
+    }
+    uv.player.selfArmies=c.ac[0].cm.selfArmies;
+    uv.player=compressString(uv.player);
+    uv['server']=LoginHelper.getInstance().strserverAlias+" ("+LoginHelper.getInstance().server+")";
+    uv['accname']=MainScreen.getCities()[0].player.playerInfo.accountName;
+    uv["summary_resources"]=getallresources();
+	uv["summary_troops"]=getalltroops();
+	uv["summary_attacks"]=getattackcount();
+	uv["summary_username"]=MainScreen.getCities()[0].player.playerInfo.userName;
+    if (!(getStatic("allwarlogs"))) setStatic("allwarlogs",new Array());
+    getCallback("addwarloglistener")();
+	uv.warlog=getStatic("allwarlogs").join("");
+    return uv;
 }
 function compressString(ty){
     rt=new ByteArray();
@@ -282,69 +94,78 @@ function compressString(ty){
     return rst.toString();
 }
 function updatewarlog(evt){
-	warlgmsg+=("<font color=\'" +"#006666"+ "\'>" + Utils.getLogTimeStr(Utils.getServerTime()) + "</font> <font color=\'" + "#000000" + "\'>" + evt.logText + "</font>\n");
+    if (getStatic("allwarlogs").length>=100){
+        getStatic("allwarlogs").shift();
+    }
+    getStatic("allwarlogs").push("<font color=\'" +"#006666"+ "\'>" + Utils.getLogTimeStr(Utils.getServerTime()) + "</font> <font color=\'" + "#000000" + "\'>" + evt.logText + "</font>\n")
 }
-function sendstatus(url){
-    if (stpupdate){
+function sendstatus(uv){
+    if (getStatic("STOPSTATUSUPDATE")){
         return;
     }
-	if (uv==null){
-		uv=null;
-		allstatus();
-		Utils.callLater(1,getCallback("sendstatus"),[url]);
-		return;
-	}
-	httpreq=new HTTPService();
-	httpreq.addEventListener(ResultEvent.RESULT,getCallback("dfg"));
-	httpreq.addEventListener(FaultEvent.FAULT,getCallback("dfg"));
-    httpreq.url=url;
-	httpreq.method="POST";
-	httpreq.send(uv);
-	uv=null;
+	if (!(httpreq)){
+        httpreq=new HTTPService();
+        httpreq.addEventListener(ResultEvent.RESULT,getCallback("dfg"));
+        httpreq.addEventListener(FaultEvent.FAULT,getCallback("dfg"));
+        httpreq.url=url;
+        httpreq.method="POST";
+    }
+	httpreq.send(allstatus());
 }
 function dfg(evt){
-	httpreq.removeEventListener(ResultEvent.RESULT,getCallback("dfg"));
-    httpreq.removeEventListener(FaultEvent.FAULT,getCallback("dfg"));
-}
-function ddss(){
-	sendstatus("http:/"+"|REPLACEWITHURL|");
+    if (evt.type==ResultEvent.RESULT){
+        c.cm.logMsg("Successfully sent status update");
+    }
+    else{
+        c.cm.logMsg("Failed to send status update");
+    }
 }
 function updater(){
-	if (stpupdate){
-		for each(p in warlogcities){
-			p.cm.removeEventListener(WarLogEvent.TYPE,getCallback("updatewarlog"));;
-		}
-		MainScreen.getInstance().removeEventListener("STOPSTATUSUPDATE",getCallback("stopupdate"));
-		return;
+	if (getStatic("STOPSTATUSUPDATE")){
+        return;
 	}
 	if (!(Connection.getInstance().authenticated)){
 		Utils.callLater(10000,getCallback("updater"));
 		return;
 	}
-	ddss();
+	getCallbackVars("sendstatus").url="http:/"+"|REPLACEWITHURL|";
+    getCallback("sendstatus")();
 	Utils.callLater(30000,getCallback("updater"));
 }
 function stopupdate(evt){
-	stpupdate=true;
+	setStatic("STOPSTATUSUPDATE",true);
+    for each(p in getCallbackVars("allstatus").warlogcities){
+        p.cm.removeEventListener(WarLogEvent.TYPE,getCallback("updatewarlog"));
+    }
+    MainScreen.getInstance().removeEventListener("STOPSTATUSUPDATE",getCallback("stopupdate"));
+    deleteCallback("stopupdate");
+    getCallbackVars("sendstatus").httpreq.removeEventListener(ResultEvent.RESULT,getCallback("dfg"));
+    getCallbackVars("sendstatus").httpreq.removeEventListener(FaultEvent.FAULT,getCallback("dfg"));
+    deleteCallback("dfg");
+    deleteCallback("sendstatus");
+}
+function setcall(y){
+    if (getCallback(y.name)){
+        deleteCallback(y.name);
+    }
+    setCallback(y);
 }
 function initializ(){
-	Env.INFINITE_LOOP_LIMIT=1000000;
-	if (MainScreen.getInstance().hasEventListener("STATUSUPDATERUNNING")){
-		c.cm.logMsg("Stopping update");
-        MainScreen.getInstance().dispatchEvent(new Event("STOPSTATUSUPDATE"));
-		MainScreen.getInstance().removeEventListener("STATUSUPDATERUNNING",MainScreen.getInstance().disableLogoutButton);
+	if (getStatic("STATUSUPDATERUNNING")){
+		c.cm.logMsg("Status update already running");
 		return;
 	}
 	c.cm.logMsg("Starting it");
-	MainScreen.getInstance().addEventListener("STATUSUPDATERUNNING",MainScreen.getInstance().disableLogoutButton);
-	warlgmsg=null;
-	stpupdate=false;
-	warlogcities=null;
-	setCallback(updater);
-	setCallback(updatewarlog);
-	setCallback(sendstatus);
-	setCallback(dfg);
-	MainScreen.getInstance().addEventListener("STOPSTATUSUPDATE",setCallback(stopupdate));
+    setStatic("STATUSUPDATERUNNING",true);
+    setStatic("STOPSTATUSUPDATE",false);
+	setcall(updater);
+	setcall(updatewarlog);
+	setcall(sendstatus);
+	setcall(dfg);
+    setcall(allstatus);
+    setcall(stopupdate);
+    setcall(addwarloglistener);
+	MainScreen.getInstance().addEventListener("STOPSTATUSUPDATE",getCallback("stopupdate"));
 	updater();
 }
 echo $m_dyn.initializ()$

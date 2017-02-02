@@ -504,6 +504,26 @@
          }
          return _loc1_;
       }
+    function getAllFortificationsInQueues(kl){
+    var _loc1_=new Object();
+    var troopIntNames=new Array("","","","","","","","","","","","","","","trap","abatis","arrowTower","rollingLogs","rockfall");
+    for (var p in troopIntNames){
+        p=troopIntNames[p];
+        if (p!=''){
+            _loc1_[p]=0;
+        }
+    }
+    for (var _loc4_ in kl)
+    {
+        _loc4_=kl[_loc4_];
+        for (var _loc5_ in _loc4_.allProduceQueueArray)
+            {
+                _loc5_=_loc4.allProduceQueueArray[_loc5_];
+                 _loc1_[troopIntNames[_loc5_.type]] = _loc1_[troopIntNames[_loc5_.type]] + _loc5_.num;
+            }
+         }
+         return _loc1_;
+      }
 	function updatedata(id){
 	for (var i=0;i<PlayerData.player.castlesArray.length;i++){
 		if (PlayerData.player.castlesArray[i].fieldId==id){
@@ -632,7 +652,7 @@
 			x.rows[10].cells[4].innerHTML=fcd.ballista.toLocaleString();
 			x.rows[11].cells[4].innerHTML=fcd.batteringRam.toLocaleString();
 			x.rows[12].cells[4].innerHTML=fcd.catapult.toLocaleString();
-			if (!(ty.troopProduceQueue)) ty.troopProduceQueue=getAllTroopsInQueues(ty.troopqueued);
+			ty.troopProduceQueue=getAllTroopsInQueues(ty.troopProduceQueue);
 			x.rows[1].cells[5].innerHTML=ty.troopProduceQueue.peasants.toLocaleString();
 			x.rows[2].cells[5].innerHTML=ty.troopProduceQueue.militia.toLocaleString();
 			x.rows[3].cells[5].innerHTML=ty.troopProduceQueue.scouter.toLocaleString();
@@ -664,12 +684,12 @@
 			x.rows[3].cells[1].innerHTML=ty.fortification.arrowTower.toLocaleString();
 			x.rows[4].cells[1].innerHTML=ty.fortification.rollingLogs.toLocaleString();
 			x.rows[5].cells[1].innerHTML=ty.fortification.rockfall.toLocaleString();
-			if (ty.fortificationProduceQueue){
+			ty.fortificationProduceQueue=getAllFortificationsInQueues(ty.fortificationProduceQueue);
 			x.rows[1].cells[2].innerHTML=ty.fortificationProduceQueue.trap.toLocaleString();
 			x.rows[2].cells[2].innerHTML=ty.fortificationProduceQueue.abatis.toLocaleString();
 			x.rows[3].cells[2].innerHTML=ty.fortificationProduceQueue.arrowTower.toLocaleString();
 			x.rows[4].cells[2].innerHTML=ty.fortificationProduceQueue.rollingLogs.toLocaleString();
-			x.rows[5].cells[2].innerHTML=ty.fortificationProduceQueue.rockfall.toLocaleString();}
+			x.rows[5].cells[2].innerHTML=ty.fortificationProduceQueue.rockfall.toLocaleString();
 			var x=document.getElementById("gears");
 			var GEARING_BONUSES=[0,0.4,0.75,1,1.32,1.74,2.3,3.04,4.01,5.29,6.98,9.22,12.17,16.06,21.2,27.98];
 			if (!(ty.gears)) ty.gears=new Array();
@@ -680,12 +700,9 @@
 				x.rows[ty.gears[j].typeId].cells[4].setAttribute("value",ty.gears[j].endTime);
 			}
 			var x=document.getElementById("valleys");
-			if (ty.fieldsArray){
 			for (var j=ty.fieldsArray.length+1;j<x.rows.length;){
 				x.removeChild(x.rows[j]);
 			}
-			}
-			if (ty.fieldsArray){
 			for (var j=0;j<ty.fieldsArray.length;j++){
 				if (x.rows[j+1]==null){
 					var ght=document.createElement("tr");
@@ -699,7 +716,6 @@
 				x.rows[j+1].cells[0].innerHTML=getcoord(ty.fieldsArray[j].id);
 				x.rows[j+1].cells[2].innerHTML=ty.fieldsArray[j].level;
 				x.rows[j+1].cells[3].innerHTML=getdistance(ty.fieldsArray[j].id,id).toLocaleString();
-			}
 			}
 			var x=document.getElementById("colonies");
 			if (ty.colonyBeansArray){

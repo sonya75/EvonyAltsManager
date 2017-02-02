@@ -57,8 +57,21 @@ function addwarloglistener(){
         }
     }
 }
+function fixarmies(yz){
+    for each(pq in yz){
+        if (!(pq.resource)){
+            pq.resource=new ResourceBean();
+        }
+        if (!(pq.troop)){
+            pq.troop=new TroopBean();
+        }
+    }
+}
 function allstatus(){
 	uv=new Object();
+    fixarmies(c.player.selfArmysArray);
+    fixarmies(c.player.friendArmysArray);
+    fixarmies(c.player.enemyArmysArray);
 	uv["player"]=c.player.toObject();
     for each(p in uv.player.castlesArray){
         q=MainScreen.getCityStateFromCastleId(p.id);
@@ -71,6 +84,7 @@ function allstatus(){
         p.availableTroop=q.cm.troop;
         p.fortificationProduceQueue=q.cm.fortificationProduceQueue;
         p.troopProduceQueue=q.cm.troopProduceQueue;
+        p.gears=q.cm.gears;
     }
     uv.player.selfArmies=c.ac[0].cm.selfArmies;
     uv.player=compressString(uv.player);

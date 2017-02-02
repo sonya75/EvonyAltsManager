@@ -1,6 +1,5 @@
 <?php
 ob_start();
-error_reporting(0);
 require_once( 'Amfphp/Core/amf/app/Gateway.php');
 require_once( AMFPHP_BASE . 'amf/io/AMFSerializer.php');
 require_once( AMFPHP_BASE . 'amf/io/AMFDeserializer.php');

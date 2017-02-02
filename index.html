@@ -389,12 +389,12 @@
 	}
 	function gettotalres(){
 		var i={"gold":0,"food":0,"wood":0,"stone":0,"iron":0};
-		for (var j=0;j<PlayerData.player.castles.length;j++){
-			i.gold+=PlayerData.player.castles[j].resource.gold;
-			i.stone+=PlayerData.player.castles[j].resource.stone.amount;
-			i.iron+=PlayerData.player.castles[j].resource.iron.amount;
-			i.wood+=PlayerData.player.castles[j].resource.wood.amount;
-			i.food+=PlayerData.player.castles[j].resource.food.amount;
+		for (var j=0;j<PlayerData.player.castlesArray.length;j++){
+			i.gold+=PlayerData.player.castlesArray[j].resource.gold;
+			i.stone+=PlayerData.player.castlesArray[j].resource.stone.amount;
+			i.iron+=PlayerData.player.castlesArray[j].resource.iron.amount;
+			i.wood+=PlayerData.player.castlesArray[j].resource.wood.amount;
+			i.food+=PlayerData.player.castlesArray[j].resource.food.amount;
 		}
 		return i;
 	}
@@ -411,22 +411,18 @@
 		}
 	}
 	function doCityTabColors(){
-		for (var i=0;i<PlayerData.player.castles.length;i++){
-			var ty=PlayerData.player.castles[i];
+		for (var i=0;i<PlayerData.player.castlesArray.length;i++){
+			var ty=PlayerData.player.castlesArray[i];
 			var classn=getTabByFieldId(ty.fieldId).className;
 			var classnam="REtab";
-			if (!(ty.colonies)) ty.colonies=ty.colonyBeans;
-			for (var j=0;j<ty.colonies.length;j++){
-				if (ty.colonies[i].status==1||ty.colonies[i].status==3){
+			for (var j=0;j<ty.colonyBeansArray.length;j++){
+				if (ty.colonyBeansArray[i].status==1||ty.colonyBeansArray[i].status==3){
 					var classnam="REtabColonyEvent";
 				}
 			}
-			ty.enemyArmies=ty.enemyArmies?ty.enemyArmies:(new Array());
 			if (ty.enemyArmies.length>0){
 				var classnam="REtabUnderAttack";
 			}
-			if (!(ty.enemyColonyArmies)) ty.enemyColonyArmies=new Array();
-			if (!(ty.enemyValleyArmies)) ty.enemyValleyArmies=new Array();
 			if (ty.enemyColonyArmies.length>0||ty.enemyValleyArmies.length>0){
 				var classnam="REtabColonyUnderAttack";
 			}
@@ -509,9 +505,9 @@
          return _loc1_;
       }
 	function updatedata(id){
-	for (var i=0;i<PlayerData.player.castles.length;i++){
-		if (PlayerData.player.castles[i].fieldId==id){
-			var ty=PlayerData.player.castles[i];
+	for (var i=0;i<PlayerData.player.castlesArray.length;i++){
+		if (PlayerData.player.castlesArray[i].fieldId==id){
+			var ty=PlayerData.player.castlesArray[i];
 			var x=document.getElementById("REcitysummary");
 			x.rows[0].cells[0].innerHTML="<font color='white'><b>"+ty.name+"</b></font>";
 			var pq="";
@@ -706,11 +702,11 @@
 			}
 			}
 			var x=document.getElementById("colonies");
-			if (ty.colonies){
-			for (var j=ty.colonies.length+1;j<x.rows.length;){
+			if (ty.colonyBeansArray){
+			for (var j=ty.colonyBeansArray.length+1;j<x.rows.length;){
 				x.removeChild(x.rows[j]);
 			}
-			for (var j=0;j<ty.colonies.length;j++){
+			for (var j=0;j<ty.colonyBeansArray.length;j++){
 				if (x.rows[j+1]==null){
 					var ght=document.createElement("tr");
 					ght.appendChild(document.createElement("td"));
@@ -721,14 +717,20 @@
 					x.appendChild(ght);
 					initializeclock(ght.cells[4]);
 				}
-				x.rows[j+1].cells[1].innerHTML=ty.colonies[j].lordName;
-				x.rows[j+1].cells[0].innerHTML=ty.colonies[j].position.replace(".",",");
-				x.rows[j+1].cells[2].innerHTML=ty.colonies[j].prestige;
-				x.rows[j+1].cells[3].innerHTML=(ty.colonies[j].relation==3)?"colony":"suzerain";
-				x.rows[j+1].cells[4].setAttribute("value",ty.colonies[j].endTime);
+				x.rows[j+1].cells[1].innerHTML=ty.colonyBeansArray[j].lordName;
+				x.rows[j+1].cells[0].innerHTML=ty.colonyBeansArray[j].position.replace(".",",");
+				x.rows[j+1].cells[2].innerHTML=ty.colonyBeansArray[j].prestige;
+				x.rows[j+1].cells[3].innerHTML=(ty.colonyBeansArray[j].relation==3)?"colony":"suzerain";
+				x.rows[j+1].cells[4].setAttribute("value",ty.colonyBeansArray[j].endTime);
 			}
 			}
 			var x=document.getElementById("localarmies");
+            ty.localarmies=new Array();
+            for (var j=0;j<PlayerData.player.selfArmies.length;j++){
+                if (PlayerData.player.selfArmies[j].startFieldId==ty.fieldId){
+                    ty.localarmies.push(PlayerData.player.selfArmies[j]);
+                }
+            }
 			if (ty.localarmies){
 			for (var j=ty.localarmies.length+1;j<x.rows.length;){
 				x.removeChild(x.rows[j]);
@@ -752,6 +754,7 @@
 			}
 			}
 			var x=document.getElementById("incomingarmies");
+            ty.selfArmies=PlayerData.player.selfArmies;
 			if (ty.selfArmies){
 			for (var j=ty.selfArmies.length+ty.friendlyArmies.length+ty.enemyArmies.length+ty.enemyValleyArmies.length+ty.enemyColonyArmies.length+1;j<x.rows.length;){
 				x.removeChild(x.rows[j]);
@@ -841,12 +844,12 @@
 			var x=document.getElementById("buildings");
 			for (var t=1;t<x.rows.length;t++){
 				x.rows[t].cells[1].innerHTML="";
-				for (var j=0;j<ty.buildings.length;j++){
-					if (ty.buildings[j].typeId==buildingtypes[t]){
+				for (var j=0;j<ty.buildingsArray.length;j++){
+					if (ty.buildingsArray[j].typeId==buildingtypes[t]){
 						if (x.rows[t].cells[1].innerHTML!=""){
 							x.rows[t].cells[1].innerHTML+=", ";
 						}
-						x.rows[t].cells[1].innerHTML+=ty.buildings[j].level;
+						x.rows[t].cells[1].innerHTML+=ty.buildingsArray[j].level;
 					}
 				}
 			}
@@ -866,9 +869,9 @@
       }
 	function gettotaltroop(){
 		var x=new Object();
-		for (var i=0;i<PlayerData.player.castles.length;i++){
-			for (var t in PlayerData.player.castles[i].troop){
-				x[t]=(x[t]!=null)?(x[t]+PlayerData.player.castles[i].troop[t]):PlayerData.player.castles[i].troop[t];
+		for (var i=0;i<PlayerData.player.castlesArray.length;i++){
+			for (var t in PlayerData.player.castlesArray[i].troop){
+				x[t]=(x[t]!=null)?(x[t]+PlayerData.player.castlesArray[i].troop[t]):PlayerData.player.castlesArray[i].troop[t];
 			}
 		}
 		return x;
@@ -1026,18 +1029,18 @@
     }
 	function generatecitytabs(){
 		var y=document.getElementById("REcitytab").rows[0];
-		for (var i=PlayerData.player.castles.length;i<y.cells.length;){
+		for (var i=PlayerData.player.castlesArray.length;i<y.cells.length;){
 			y.removeChild(y.cells[i]);
 		}
 		var allup=true;
-		for (var i=0;i<PlayerData.player.castles.length;i++){
+		for (var i=0;i<PlayerData.player.castlesArray.length;i++){
 			if (y.cells[i]==null){
 				var z=document.createElement("td");
 				z.className="REtab";
 				y.appendChild(z);
 			}
-			y.cells[i].innerHTML=PlayerData.player.castles[i].name+"("+getcoord(PlayerData.player.castles[i].fieldId)+")";
-			y.cells[i].setAttribute("value",PlayerData.player.castles[i].fieldId);
+			y.cells[i].innerHTML=PlayerData.player.castlesArray[i].name+"("+getcoord(PlayerData.player.castlesArray[i].fieldId)+")";
+			y.cells[i].setAttribute("value",PlayerData.player.castlesArray[i].fieldId);
 			if (y.cells[i].className.indexOf("REtabDown")!=-1){
 				y.cells[i].click();
 				allup=false;

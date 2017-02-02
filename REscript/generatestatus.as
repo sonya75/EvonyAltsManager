@@ -86,7 +86,6 @@ function allstatus(){
         p.troopProduceQueue=q.cm.troopProduceQueue;
         p.gears=q.cm.gears;
     }
-    uv.player.selfArmies=c.ac[0].cm.selfArmies;
     uv.player=compressString(uv.player);
     uv['server']=LoginHelper.getInstance().strserverAlias+" ("+LoginHelper.getInstance().server+")";
     uv['accname']=MainScreen.getCities()[0].player.playerInfo.accountName;

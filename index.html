@@ -742,9 +742,9 @@
 			}
 			var x=document.getElementById("localarmies");
             ty.localarmies=new Array();
-            for (var j=0;j<PlayerData.player.selfArmies.length;j++){
-                if (PlayerData.player.selfArmies[j].startFieldId==ty.fieldId){
-                    ty.localarmies.push(PlayerData.player.selfArmies[j]);
+            for (var j=0;j<PlayerData.player.selfArmysArray.length;j++){
+                if (PlayerData.player.selfArmysArray[j].startFieldId==ty.fieldId){
+                    ty.localarmies.push(PlayerData.player.selfArmysArray[j]);
                 }
             }
 			if (ty.localarmies){
@@ -770,7 +770,7 @@
 			}
 			}
 			var x=document.getElementById("incomingarmies");
-            ty.selfArmies=PlayerData.player.selfArmies;
+            ty.selfArmies=PlayerData.player.selfArmysArray;
 			if (ty.selfArmies){
 			for (var j=ty.selfArmies.length+ty.friendlyArmies.length+ty.enemyArmies.length+ty.enemyValleyArmies.length+ty.enemyColonyArmies.length+1;j<x.rows.length;){
 				x.removeChild(x.rows[j]);

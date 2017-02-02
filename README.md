@@ -11,7 +11,10 @@ Once you are done, open the link to the update.php file in your browser. It will
 At last, you will need to run the following script in RE to send updates to your server and you can see the updates by opening the link to the index.html file your browser.
 
 ```
-//In the following line replace url_here by the link to the generatestatus.as file in the REscript folder without http or https at the beginning, like for example:- www.example.com/EvonyAltsManager-master/REscript/generatestatus.as
+//In the following line replace url_here by the link to the generatestatus.as file in the 
+//REscript folder without http or https at the beginning, like 
+//for example:- www.example.com/EvonyAltsManager-master/REscript/generatestatus.as
+
 set downloadlocation url_here
 set timeout 30
 echo $m_dyn.sendrequest()$

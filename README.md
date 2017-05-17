@@ -13,52 +13,7 @@ At last, you will need to run the following script in RE to send updates to your
 ```
 //In the following line replace url_here by the link to the generatestatus.as file in the 
 //REscript folder without http or https at the beginning, like 
-//for example:- www.example.com/EvonyAltsManager-master/REscript/generatestatus.as
+//for example:- http://www.example.com/EvonyAltsManager-master/REscript/generatestatus.as
 
-set downloadlocation url_here
-set timeout 30
-echo $m_dyn.sendrequest()$
-sleep {2*%timeout%}
-
-import autoevony.common.Utils;
-import autoevony.gui.MainScreen;
-import flash.utils.Timer;
-import flash.events.TimerEvent;
-import mx.rpc.http.HTTPService;
-import mx.rpc.events.ResultEvent;
-import mx.rpc.events.FaultEvent;
-function setcall(yt){
-	if (getCallback(yt.name)){
-		deleteCallback(yt.name);
-	}
-	setCallback(yt);
-}
-function sendrequest(){x = new HTTPService();
-x.url="http:/"+"/"+getVar("downloadlocation")+"?random="+(new Date().getTime());
-x.resultFormat='text';
-x.addEventListener(FaultEvent.FAULT,setcall(receiveddata));
-x.addEventListener(ResultEvent.RESULT,getCallback("receiveddata"));
-x.send();
-timr=new Timer(getVar("timeout")*1000,1);
-timr.addEventListener(TimerEvent.TIMER,getCallback("receiveddata"));
-timr.start();
-getCallbackVars("receiveddata").timr=timr;
-getCallbackVars("receiveddata").x=x;}
-function dummy(evt){}
-function receiveddata(evt){
-timr.stop();
-x.removeEventListener(ResultEvent.RESULT,getCallback("receiveddata"));
-x.removeEventListener(FaultEvent.FAULT,getCallback("receiveddata"));
-timr.removeEventListener(TimerEvent.TIMER,getCallback("receiveddata"));
-deleteCallback("receiveddata");
-MainScreen.getInstance().getCityPanel(c.castle.id).getScript().stop();
-if (evt.type==TimerEvent.TIMER || evt.type==FaultEvent.FAULT) {
-c.cm.logMsg("Error downloading script");
-return;
-}
-Utils.callLater(10,setcall(runit),[evt.message.body]);}
-function runit(dat){
-deleteCallback("runit");
-MainScreen.getInstance().getCityPanel(c.castle.id).getScript().set_m_script(dat);
-MainScreen.getInstance().getCityPanel(c.castle.id).getScript().start();}
+includeurl url_here
 ```

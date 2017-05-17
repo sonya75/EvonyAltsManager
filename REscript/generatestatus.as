@@ -74,8 +74,8 @@ function allstatus(){
     fixarmies(c.player.enemyArmysArray);
 	uv["player"]=c.player.toObject();
     for each(p in uv.player.castlesArray){
-        q=MainScreen.getCityStateFromCastleId(p.id);
-        p.researches=MainScreen.getCityStateFromCastleId(p.id).cm.researches;
+        q=MainScreen.getCityFromCastleId(p.id);
+        p.researches=MainScreen.getCityFromCastleId(p.id).cm.researches;
         p.enemyArmies=q.cm.enemyArmies;
         p.enemyValleyArmies=q.cm.enemyValleyArmies;
         p.enemyColonyArmies=q.cm.enemyColonyArmies;

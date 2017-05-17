@@ -12,8 +12,7 @@ At last, you will need to run the following script in RE to send updates to your
 
 ```
 //In the following line replace url_here by the link to the generatestatus.as file in the 
-//REscript folder without http or https at the beginning, like 
-//for example:- http://www.example.com/EvonyAltsManager-master/REscript/generatestatus.as
+//REscript folder, for example:- http://www.example.com/EvonyAltsManager-master/REscript/generatestatus.as
 
 includeurl url_here
 ```
